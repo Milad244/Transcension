@@ -50,14 +50,13 @@ public class PlayerMovement : MonoBehaviour
             // horizontal movement
             body.linearVelocity = new UnityEngine.Vector2(horizontalInput * speed, body.linearVelocity.y);
 
-            // jump movement
-            if (onWall() && !isGrounded())
+            if (onWall() && !isGrounded()) // on wall
             {
                 body.gravityScale = 0;
                 body.linearVelocity = UnityEngine.Vector2.zero;
             }
             else
-                body.gravityScale = default_gravity;
+                body.gravityScale = default_gravity; // not on wall
 
             if(onPushCeiling())
                 ceilingPush();
@@ -71,12 +70,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        if (isGrounded())
+        if (isGrounded()) // regular jump
         {
             body.linearVelocity = new UnityEngine.Vector2(body.linearVelocity.x, jumpPower);
             anim.SetTrigger("jump");
         }
-        else if (onWall() && !isGrounded())
+        else if (onWall() && !isGrounded()) // wall jump
         {
             if (horizontalInput == 0)
             {

@@ -3,12 +3,13 @@ using UnityEngine;
 public class Fireball : MonoBehaviour
 {
     [SerializeField] private float speed;
+    private BoxCollider2D boxCollider;
+    private Animator anim;
     private float direction;
     private bool hit;
     private float lifetime;
-
-    private BoxCollider2D boxCollider;
-    private Animator anim;
+    private float charge;
+   
 
     private void Awake()
     {
@@ -19,14 +20,17 @@ public class Fireball : MonoBehaviour
     private void Update()
     {
         if (hit) return;
+
+        // fireball flying
         float movementSpeed = speed * Time.deltaTime * direction;
         transform.Translate(movementSpeed, 0, 0);
 
+        // ending fireball after 3 sec
         lifetime += Time.deltaTime;
         if (lifetime > 3)gameObject.SetActive(false);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) // make fireballs not 
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player" || collision.tag == "Fireball")
             return;
@@ -36,22 +40,30 @@ public class Fireball : MonoBehaviour
         anim.SetTrigger("explode");
     }
 
-    public void setDirection(float direction)
+    public void setFireball(float direction, float charge)
     {
         lifetime = 0;
-        this.direction = direction;
         gameObject.SetActive(true);
         hit = false;
         boxCollider.enabled = true;
 
-        float localScaleX = transform.localScale.x;
-        if (Mathf.Sign(localScaleX) != direction)
-            localScaleX = -localScaleX;
+        this.direction = direction;
 
-        transform.localScale = new Vector3(localScaleX, transform.localScale.y, transform.localScale.z);
+        if (charge > 1)
+            this.charge = 1;
+        else if (charge < 0.5f)
+            this.charge = 0.5f;
+        else
+            this.charge = charge;
+
+        float absCharge = this.charge;
+        if (Mathf.Sign(this.charge) != direction)
+            this.charge = -this.charge;
+
+        transform.localScale = new Vector3(this.charge, absCharge, absCharge);
     }
 
-    private void deactivate()
+    private void deactivate() // Called after explode anim is finished
     {
         gameObject.SetActive(false);
     }

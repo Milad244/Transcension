@@ -1,13 +1,17 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour //Make it so the longer you hold down the bigger the fireball and dmg but larger CD and lower speed
+public class PlayerAttack : MonoBehaviour
 {
     private Animator anim;
     private PlayerMovement playerMovement;
+    [SerializeField] private UIControl uiControl;
     [SerializeField] private float attackCD;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject[] fireballs;
     private float attackCDTimer;
+    private float attackCharge;
+    private bool attackMouseDown;
 
     private void Awake()
     {
@@ -17,21 +21,47 @@ public class PlayerAttack : MonoBehaviour //Make it so the longer you hold down 
 
     private void Update()
     {
-        if (attackCDTimer <= 0)
+        if (attackCDTimer > 0)
         {
-            if (Input.GetKey(KeyCode.Mouse0) && playerMovement.canAttack())
-                attack();
-        } else
             attackCDTimer -= Time.deltaTime;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            attackMouseDown = true;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            attackMouseDown = false;
+
+            if (attackCDTimer <= 0 && playerMovement.canAttack()) 
+                attack();
+        }
+        
+        // Adding charge if mouse button is being held down
+        if (attackMouseDown)
+        {
+            attackCharge += Time.deltaTime;
+            
+            if (attackCharge > 3) // Making sure user cannot indefinitely hold charge
+                attackCharge = 3;
+        }
+        else
+            attackCharge = 0; // Important. If cannot attack it does not retain charge
+        
+        uiControl.updateCharge(attackCharge);
     }
 
     private void attack()
     {
         anim.SetTrigger("attack");
-        attackCDTimer = attackCD;
 
         fireballs[findFireball()].transform.position = firePoint.position;
-        fireballs[findFireball()].GetComponent<Fireball>().setDirection(Mathf.Sign(transform.localScale.x));
+        fireballs[findFireball()].GetComponent<Fireball>().setFireball(Mathf.Sign(transform.localScale.x), attackCharge);
+
+        attackCDTimer = attackCD;
+        attackCharge = 0;
     }
 
     private int findFireball()
