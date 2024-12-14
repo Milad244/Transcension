@@ -732,7 +732,7 @@ TextureImporter:
         x: 0
         y: 480
         width: 32
-        height: 32
+        height: 31
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -759,7 +759,7 @@ TextureImporter:
         x: 32
         y: 480
         width: 32
-        height: 32
+        height: 31
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -781,7 +781,7 @@ TextureImporter:
         x: 64
         y: 480
         width: 32
-        height: 32
+        height: 31
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1333,10 +1333,10 @@ TextureImporter:
       name: TX Tileset Ground_27
       rect:
         serializedVersion: 2
-        x: 480
-        y: 352
-        width: 32
-        height: 32
+        x: 481
+        y: 368
+        width: 30
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

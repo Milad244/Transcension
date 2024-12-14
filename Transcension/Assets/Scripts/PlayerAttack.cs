@@ -12,6 +12,7 @@ public class PlayerAttack : MonoBehaviour
     private float attackCDTimer;
     private float attackCharge;
     private bool attackMouseDown;
+    private float holdChargeTime;
 
     private void Awake()
     {
@@ -42,14 +43,23 @@ public class PlayerAttack : MonoBehaviour
         // Adding charge if mouse button is being held down
         if (attackMouseDown)
         {
-            attackCharge += Time.deltaTime;
+            if (attackCharge < 1)
+                attackCharge += Time.deltaTime * 2;
+
+            holdChargeTime += Time.deltaTime;
             
-            if (attackCharge > 3) // Making sure user cannot indefinitely hold charge
-                attackCharge = 3;
+            if (holdChargeTime > 3) // Making sure user cannot indefinitely hold charge
+            {
+                holdChargeTime = 0;
+                attackCharge = 0;
+            } 
         }
         else
-            attackCharge = 0; // Important. If cannot attack it does not retain charge
-        
+        { // Important. If cannot attack, it does not retain charge
+            holdChargeTime = 0; 
+            attackCharge = 0;
+        }
+            
         uiControl.updateCharge(attackCharge);
     }
 

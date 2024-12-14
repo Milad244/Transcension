@@ -7,9 +7,6 @@ public class UIControl : MonoBehaviour
 
     public void updateCharge(float charge)
     {
-        if (charge > 1)
-            charge = 1;
-
         attackCharge.SetText(charge.ToString("0.00"));
     }
 }
