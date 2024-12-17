@@ -3,10 +3,20 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private Transform player;
+    [SerializeField] private float posXMaxLim;
+    [SerializeField] private float posXMinLim;
+    private float cameraPosX;
 
     private void Update()
     {
-        transform.position = new Vector3(player.position.x, player.position.y + 2, transform.position.z);
+        if (player.position.x > posXMaxLim)
+            cameraPosX = posXMaxLim;
+        else if (player.position.x < posXMinLim)
+            cameraPosX = posXMinLim;
+        else
+            cameraPosX = player.position.x;
+
+        transform.position = new Vector3(cameraPosX, player.position.y + 3, transform.position.z);
     }
 
     
