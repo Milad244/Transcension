@@ -6,6 +6,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float posXMaxLim;
     [SerializeField] private float posXMinLim;
     private float cameraPosX;
+    private float cameraPosY;
 
     private void Update()
     {
@@ -16,7 +17,13 @@ public class CameraController : MonoBehaviour
         else
             cameraPosX = player.position.x;
 
-        transform.position = new Vector3(cameraPosX, player.position.y + 3, transform.position.z);
+        
+        if (player.position.y < 3 + 2) 
+            cameraPosY = 3;
+        else
+            cameraPosY = player.position.y - 2;
+
+        transform.position = new Vector3(cameraPosX, cameraPosY, transform.position.z);
     }
 
     

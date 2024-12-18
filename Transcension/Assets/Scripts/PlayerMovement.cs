@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public float ceilingPushPower;
     public float default_gravity;
     public float wallJumpCD;
+    public UnityEngine.Vector3 spawn;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask climbWallLayer;
     [SerializeField] private LayerMask pushCeilingLayer;
@@ -18,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D boxCollider;
     private float horizontalInput;
     private float wallJumpCDTimer;
+    private bool dying;
 
 
 
@@ -27,10 +29,15 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
         body.gravityScale = default_gravity;
+
+        transform.localPosition = spawn; // Bringing player to spawn
     }
 
     private void Update()
     {
+        if (dying)
+            return;
+
         // horizontal movement
         horizontalInput = Input.GetAxis("Horizontal");
 
@@ -114,6 +121,20 @@ public class PlayerMovement : MonoBehaviour
 
     public bool canAttack()
     {
-        return !onWall();
+        return !onWall() && !dying;
+    }
+
+    public void dieMovement()
+    {
+        dying = true;
+        body.linearVelocity = new UnityEngine.Vector2(0, body.linearVelocity.y);
+        anim.SetTrigger("die");
+    }
+
+    public void reviveMovement()
+    {
+        transform.localPosition = spawn;
+        anim.SetTrigger("returnIdle");
+        dying = false;
     }
 }
