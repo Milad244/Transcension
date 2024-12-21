@@ -127,7 +127,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3226521009676847262}
   m_Layer: 0
-  m_Name: PF Village Props - Road Lamp
+  m_Name: Lantern
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

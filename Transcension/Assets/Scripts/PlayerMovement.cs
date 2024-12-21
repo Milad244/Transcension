@@ -1,7 +1,5 @@
-using System.Numerics;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -10,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float ceilingPushPower;
     public float default_gravity;
     public float wallJumpCD;
-    public UnityEngine.Vector3 spawn;
+    [SerializeField] private Transform spawn1;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask climbWallLayer;
     [SerializeField] private LayerMask pushCeilingLayer;
@@ -20,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalInput;
     private float wallJumpCDTimer;
     private bool dying;
+    Vector3 spawn1Pos;
 
 
 
@@ -30,7 +29,11 @@ public class PlayerMovement : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         body.gravityScale = default_gravity;
 
-        transform.localPosition = spawn; // Bringing player to spawn
+        
+        spawn1Pos = new Vector3(spawn1.position.x, spawn1.position.y + 2.228477f - 1);
+        // Make array for spawns
+
+        transform.localPosition = spawn1Pos; // Can edit the glow for each room
     }
 
     private void Update()
@@ -43,9 +46,9 @@ public class PlayerMovement : MonoBehaviour
 
         // flipping character
         if (horizontalInput > 0.01f)
-            transform.localScale = UnityEngine.Vector3.one;
+            transform.localScale = Vector3.one;
         else if (horizontalInput < -0.01f)
-            transform.localScale = new UnityEngine.Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(-1, 1, 1);
 
         // animation params
         anim.SetBool("run", horizontalInput != 0);
@@ -55,12 +58,12 @@ public class PlayerMovement : MonoBehaviour
         if (wallJumpCDTimer <= 0)
         {
             // horizontal movement
-            body.linearVelocity = new UnityEngine.Vector2(horizontalInput * speed, body.linearVelocity.y);
+            body.linearVelocity = new Vector2(horizontalInput * speed, body.linearVelocity.y);
 
             if (onWall() && !isGrounded()) // on wall
             {
                 body.gravityScale = 0;
-                body.linearVelocity = UnityEngine.Vector2.zero;
+                body.linearVelocity = Vector2.zero;
             }
             else
                 body.gravityScale = default_gravity; // not on wall
@@ -70,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Space))
                 Jump();
+                
         }
         else
             wallJumpCDTimer -= Time.deltaTime;
@@ -79,18 +83,18 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isGrounded()) // regular jump
         {
-            body.linearVelocity = new UnityEngine.Vector2(body.linearVelocity.x, jumpPower);
+            body.linearVelocity = new Vector2(body.linearVelocity.x, jumpPower);
             anim.SetTrigger("jump");
         }
         else if (onWall() && !isGrounded()) // wall jump
         {
             if (horizontalInput == 0)
             {
-                body.linearVelocity = new UnityEngine.Vector2(-Mathf.Sign(transform.localScale.x) * 10, 0);
-                transform.localScale = new UnityEngine.Vector3(-Mathf.Sign(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+                body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 10, 0);
+                transform.localScale = new Vector3(-Mathf.Sign(transform.localScale.x), transform.localScale.y, transform.localScale.z);
             }
             else
-                body.linearVelocity = new UnityEngine.Vector2(-Mathf.Sign(transform.localScale.x) * 3, 6);
+                body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 3, 6);
 
             wallJumpCDTimer = wallJumpCD;
         }
@@ -98,24 +102,34 @@ public class PlayerMovement : MonoBehaviour
 
     private void ceilingPush()
     {
-        body.linearVelocity = new UnityEngine.Vector2(body.linearVelocity.x, -ceilingPushPower);
+        body.linearVelocity = new Vector2(body.linearVelocity.x, -ceilingPushPower);
     }
 
     private bool isGrounded()
     {
-        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, UnityEngine.Vector2.down, 0.1f, groundLayer);
+        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, groundLayer);
         return rayCastHit.collider != null;
     }
 
-    private bool onWall()
+
+    private bool onWall() // Prob only works if the collider is on the actual climb wall
     {
-        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new UnityEngine.Vector2(transform.localScale.x, 0), 0.1f, climbWallLayer);
-        return rayCastHit.collider != null;
+        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, climbWallLayer);
+        if (rayCastHit.collider == null)
+            return false;
+            
+        GameObject climbWall = rayCastHit.transform.gameObject;
+        if (climbWall.transform.rotation.y == 1 && Mathf.Sign(transform.localScale.x) == -1)
+            return false;
+        else if (climbWall.transform.rotation.y == 0 && Mathf.Sign(transform.localScale.x) == 1)
+            return false;
+
+        return true;
     }
 
     private bool onPushCeiling()
     {
-        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, UnityEngine.Vector2.up, 0.1f, pushCeilingLayer);
+        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, 0.1f, pushCeilingLayer);
         return rayCastHit.collider != null;
     }
 
@@ -127,13 +141,13 @@ public class PlayerMovement : MonoBehaviour
     public void dieMovement()
     {
         dying = true;
-        body.linearVelocity = new UnityEngine.Vector2(0, body.linearVelocity.y);
+        body.linearVelocity = new Vector2(0, 0);
         anim.SetTrigger("die");
     }
 
     public void reviveMovement()
     {
-        transform.localPosition = spawn;
+        transform.localPosition = spawn1Pos;
         anim.SetTrigger("returnIdle");
         dying = false;
     }
