@@ -1,24 +1,35 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private Rigidbody2D body;
+    private Animator anim;
+    private BoxCollider2D boxCollider;
+
+    [SerializeField] private GameObject cameraHolder;
+    private CameraController cameraController;
+    [SerializeField] private Transform spawn1;
+    [SerializeField] private Transform spawn2;
+    [SerializeField] private Transform transcend1;
+    private Dictionary<GameObject, Transform> transcendSpawnMap;
+    private Dictionary<GameObject, float> transcendFloorLimitMap;
+    
     public float speed;
     public float jumpPower;
     public float ceilingPushPower;
     public float default_gravity;
     public float wallJumpCD;
-    [SerializeField] private Transform spawn1;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask climbWallLayer;
     [SerializeField] private LayerMask pushCeilingLayer;
-    private Rigidbody2D body;
-    private Animator anim;
-    private BoxCollider2D boxCollider;
+
     private float horizontalInput;
     private float wallJumpCDTimer;
     private bool dying;
-    Vector3 spawn1Pos;
+    private Vector3 revivePos;
 
 
 
@@ -29,11 +40,21 @@ public class PlayerMovement : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         body.gravityScale = default_gravity;
 
-        
-        spawn1Pos = new Vector3(spawn1.position.x, spawn1.position.y + 2.228477f - 1);
-        // Make array for spawns
+        cameraController = cameraHolder.GetComponent<CameraController>();
 
-        transform.localPosition = spawn1Pos; // Can edit the glow for each room
+        transcendSpawnMap = new Dictionary<GameObject, Transform>
+        {
+            { transcend1.gameObject, spawn2 }
+        };
+
+        transcendFloorLimitMap = new Dictionary<GameObject, float>
+        {
+            { transcend1.gameObject, 50.4f}
+        };
+
+        revivePos = AdjustSpawnPosition(spawn1.position);
+        transform.localPosition = revivePos;
+        cameraController.changeFloorLimit(3);
     }
 
     private void Update()
@@ -147,8 +168,34 @@ public class PlayerMovement : MonoBehaviour
 
     public void reviveMovement()
     {
-        transform.localPosition = spawn1Pos;
+        transform.localPosition = revivePos;
         anim.SetTrigger("returnIdle");
         dying = false;
+    }
+
+    private Vector3 AdjustSpawnPosition(Vector3 originalPosition)
+    {
+        return new Vector3(originalPosition.x, originalPosition.y + 2.228477f - 1, originalPosition.z);
+    }
+
+    public void transcend(GameObject transcendLevel)
+    {
+        if (transcendSpawnMap.TryGetValue(transcendLevel, out Transform spawnTransform))
+        {
+            revivePos = AdjustSpawnPosition(spawnTransform.position);
+            transform.localPosition = revivePos;
+
+            if (transcendFloorLimitMap.TryGetValue(transcendLevel, out float floorLimit))
+            {
+                cameraController.changeFloorLimit(floorLimit);
+            } else
+            {
+                Debug.LogWarning("Transcend level not mapped to a floor limit.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Transcend level not mapped to a spawn point.");
+        }
     }
 }

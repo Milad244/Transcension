@@ -5,10 +5,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private float posXMaxLim;
     [SerializeField] private float posXMinLim;
+    private float floorLimit;
     private float cameraPosX;
     private float cameraPosY;
 
-    private void Update()
+    private void Update() // Change so each level has its own lower limit
     {
         if (player.position.x > posXMaxLim)
             cameraPosX = posXMaxLim;
@@ -18,13 +19,16 @@ public class CameraController : MonoBehaviour
             cameraPosX = player.position.x;
 
         
-        if (player.position.y < 3 + 2) 
-            cameraPosY = 3;
+        if (player.position.y < floorLimit + 2) 
+            cameraPosY = floorLimit;
         else
             cameraPosY = player.position.y - 2;
 
         transform.position = new Vector3(cameraPosX, cameraPosY, transform.position.z);
     }
 
-    
+    public void changeFloorLimit(float floorLimit) //default 3
+    {
+        this.floorLimit = floorLimit;
+    }
 }
