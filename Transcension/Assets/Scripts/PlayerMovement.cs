@@ -11,11 +11,11 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private GameObject cameraHolder;
     private CameraController cameraController;
-    [SerializeField] private Transform spawn1;
-    [SerializeField] private Transform spawn2;
-    [SerializeField] private Transform transcend1;
+    [SerializeField] private Transform[] spawns;
+    [SerializeField] private Transform[] transcends;
     private Dictionary<GameObject, Transform> transcendSpawnMap;
-    private Dictionary<GameObject, float> transcendFloorLimitMap;
+    [SerializeField] private Transform[] floors;
+    private Dictionary<GameObject, Transform> transcendFloorLimitMap;
     
     public float speed;
     public float jumpPower;
@@ -44,17 +44,17 @@ public class PlayerMovement : MonoBehaviour
 
         transcendSpawnMap = new Dictionary<GameObject, Transform>
         {
-            { transcend1.gameObject, spawn2 }
+            { transcends[0].gameObject, spawns[1] }
         };
 
-        transcendFloorLimitMap = new Dictionary<GameObject, float>
+        transcendFloorLimitMap = new Dictionary<GameObject, Transform>
         {
-            { transcend1.gameObject, 50.4f}
+            { transcends[0].gameObject, floors[1]}
         };
 
-        revivePos = AdjustSpawnPosition(spawn1.position);
+        revivePos = adjustSpawnPosition(spawns[0].position);
         transform.localPosition = revivePos;
-        cameraController.changeFloorLimit(3);
+        cameraController.changeFloorLimit(adjustFloorLimit(floors[0]));
     }
 
     private void Update()
@@ -173,20 +173,26 @@ public class PlayerMovement : MonoBehaviour
         dying = false;
     }
 
-    private Vector3 AdjustSpawnPosition(Vector3 originalPosition)
+    private Vector3 adjustSpawnPosition(Vector3 originalPosition)
     {
         return new Vector3(originalPosition.x, originalPosition.y + 2.228477f - 1, originalPosition.z);
+    }
+
+    private float adjustFloorLimit(Transform floor)
+    {
+        return floor.localScale.y + floor.position.y + 1; // Y-Size of ground + y position of ground + playerheight DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
     }
 
     public void transcend(GameObject transcendLevel)
     {
         if (transcendSpawnMap.TryGetValue(transcendLevel, out Transform spawnTransform))
         {
-            revivePos = AdjustSpawnPosition(spawnTransform.position);
+            revivePos = adjustSpawnPosition(spawnTransform.position);
             transform.localPosition = revivePos;
 
-            if (transcendFloorLimitMap.TryGetValue(transcendLevel, out float floorLimit))
+            if (transcendFloorLimitMap.TryGetValue(transcendLevel, out Transform floor))
             {
+                float floorLimit = adjustFloorLimit(floor);
                 cameraController.changeFloorLimit(floorLimit);
             } else
             {

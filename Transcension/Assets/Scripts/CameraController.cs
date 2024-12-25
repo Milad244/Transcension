@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour
         transform.position = new Vector3(cameraPosX, cameraPosY, transform.position.z);
     }
 
-    public void changeFloorLimit(float floorLimit) //default 3
+    public void changeFloorLimit(float floorLimit)
     {
         this.floorLimit = floorLimit;
     }

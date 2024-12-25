@@ -18,7 +18,7 @@ public class PlayerResources : MonoBehaviour
             playerMovement.transcend(transcendLevel);
         }
     }
-    private void OnTriggerEnter2D(Collider2D col)
+    private void OnTriggerEnter2D(Collider2D col) // Add mine that releases when you step on pressure plate
     {
         if (col.CompareTag("Spikes"))
             die();
