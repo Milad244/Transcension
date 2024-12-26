@@ -41,12 +41,6 @@ public class PlayerResources : MonoBehaviour
             deactiveMineTriggers.Add(colGameObj);
             colGameObj.SetActive(false);
         }
-
-        if (col.CompareTag("Mine"))
-        {
-            die();
-            Destroy(colGameObj);
-        }
     }
 
     private void OnTriggerExit2D(Collider2D col)
@@ -60,7 +54,7 @@ public class PlayerResources : MonoBehaviour
         playerMovement.dieMovement();
     }
 
-    private void revive()
+    private void revive() //Called in animation
     {
         playerMovement.reviveMovement();
 

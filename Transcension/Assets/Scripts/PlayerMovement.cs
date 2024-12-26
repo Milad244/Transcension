@@ -12,8 +12,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject cameraHolder;
     private CameraController cameraController;
     [SerializeField] private Transform[] spawns;
+    [SerializeField] private Transform[] hSpawns;
     [SerializeField] private Transform[] transcends;
     private Dictionary<GameObject, Transform> transcendSpawnMap;
+    private Dictionary<GameObject, Transform> transcendHspawnMap;
     [SerializeField] private Transform[] floors;
     private Dictionary<GameObject, Transform> transcendFloorLimitMap;
     
@@ -22,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     public float ceilingPushPower;
     public float default_gravity;
     public float wallJumpCD;
+    public bool hardMode;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask climbWallLayer;
     [SerializeField] private LayerMask pushCeilingLayer;
@@ -47,12 +50,25 @@ public class PlayerMovement : MonoBehaviour
             { transcends[0].gameObject, spawns[1] }
         };
 
+        transcendHspawnMap = new Dictionary<GameObject, Transform>
+        {
+            { transcends[0].gameObject, hSpawns[1] }
+        };
+
         transcendFloorLimitMap = new Dictionary<GameObject, Transform>
         {
             { transcends[0].gameObject, floors[1]}
         };
 
-        revivePos = adjustSpawnPosition(spawns[0].position);
+        // Dealing with first spawn
+        if (!hardMode)
+        {
+            revivePos = adjustSpawnPosition(spawns[0].position);
+        }
+        else
+        {
+            revivePos = adjustSpawnPosition(hSpawns[0].position);
+        }
         transform.localPosition = revivePos;
         cameraController.changeFloorLimit(adjustFloorLimit(floors[0]));
     }
@@ -185,23 +201,35 @@ public class PlayerMovement : MonoBehaviour
 
     public void transcend(GameObject transcendLevel)
     {
-        if (transcendSpawnMap.TryGetValue(transcendLevel, out Transform spawnTransform))
+        if (!hardMode)
         {
-            revivePos = adjustSpawnPosition(spawnTransform.position);
-            transform.localPosition = revivePos;
-
-            if (transcendFloorLimitMap.TryGetValue(transcendLevel, out Transform floor))
+            if (transcendSpawnMap.TryGetValue(transcendLevel, out Transform spawnTransform))
             {
-                float floorLimit = adjustFloorLimit(floor);
-                cameraController.changeFloorLimit(floorLimit);
+                revivePos = adjustSpawnPosition(spawnTransform.position);
+                transform.localPosition = revivePos;
             } else
             {
-                Debug.LogWarning("Transcend level not mapped to a floor limit.");
+                Debug.LogWarning("Transcend level not mapped to a spawn point.");
+            }
+        } else
+        {
+            if (transcendHspawnMap.TryGetValue(transcendLevel, out Transform hSpawnTransform))
+            {
+                revivePos = adjustSpawnPosition(hSpawnTransform.position);
+                transform.localPosition = revivePos;
+            } else
+            {
+                Debug.LogWarning("Transcend level not mapped to a spawn point.");
             }
         }
-        else
+
+        if (transcendFloorLimitMap.TryGetValue(transcendLevel, out Transform floor))
         {
-            Debug.LogWarning("Transcend level not mapped to a spawn point.");
+            float floorLimit = adjustFloorLimit(floor);
+            cameraController.changeFloorLimit(floorLimit);
+        } else
+        {
+            Debug.LogWarning("Transcend level not mapped to a floor limit.");
         }
     }
 }
