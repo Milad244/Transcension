@@ -1,14 +1,19 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerResources : MonoBehaviour
 {
+    [SerializeField] private GameObject minePrefab;
     private PlayerMovement playerMovement;
     private bool canTranscend;
     private GameObject transcendLevel;
+    private List<GameObject> deactiveMineTriggers;
 
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        deactiveMineTriggers = new List<GameObject>();
     }
 
     private void Update()
@@ -18,17 +23,30 @@ public class PlayerResources : MonoBehaviour
             playerMovement.transcend(transcendLevel);
         }
     }
-    private void OnTriggerEnter2D(Collider2D col) // Add mine that releases when you step on pressure plate
+    private void OnTriggerEnter2D(Collider2D col)
     {
+        GameObject colGameObj = col.gameObject;
         if (col.CompareTag("Spikes"))
             die();
 
         if (col.CompareTag("Transcend"))
         {
             canTranscend = true;
-            transcendLevel = col.gameObject;
+            transcendLevel = colGameObj;
         } 
 
+        if (col.CompareTag("MTrigger"))
+        {
+            setMine(colGameObj.transform.position);
+            deactiveMineTriggers.Add(colGameObj);
+            colGameObj.SetActive(false);
+        }
+
+        if (col.CompareTag("Mine"))
+        {
+            die();
+            Destroy(colGameObj);
+        }
     }
 
     private void OnTriggerExit2D(Collider2D col)
@@ -37,7 +55,7 @@ public class PlayerResources : MonoBehaviour
             canTranscend = false;
     }
 
-    private void die()
+    public void die()
     {
         playerMovement.dieMovement();
     }
@@ -45,5 +63,15 @@ public class PlayerResources : MonoBehaviour
     private void revive()
     {
         playerMovement.reviveMovement();
+
+        foreach (GameObject deactiveMineTrigger in deactiveMineTriggers) {
+            deactiveMineTrigger.SetActive(true);
+        } 
+    }
+
+    private void setMine(Vector3 tPosition)
+    {
+        Vector3 mPosition = new Vector3(tPosition.x, tPosition.y + 10, tPosition.z);
+        Instantiate(minePrefab, mPosition, Quaternion.identity);
     }
 }

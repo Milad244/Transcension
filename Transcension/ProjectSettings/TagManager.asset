@@ -8,6 +8,8 @@ TagManager:
   - Fireball
   - Spikes
   - Transcend
+  - MTrigger
+  - Mine
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - Ground
   - ClimbWall
   - PushCeiling
-  - Spikes
+  - 
   - 
   - 
   - 
