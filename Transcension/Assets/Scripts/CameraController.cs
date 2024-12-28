@@ -31,4 +31,10 @@ public class CameraController : MonoBehaviour
     {
         this.floorLimit = floorLimit;
     }
+
+    public void changeWallLimit(float posXMinLim, float posXMaxLim)
+    {
+        this.posXMinLim = posXMinLim;
+        this.posXMaxLim = posXMaxLim;
+    }
 }

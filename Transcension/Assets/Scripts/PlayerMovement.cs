@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,13 +12,9 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private GameObject cameraHolder;
     private CameraController cameraController;
-    [SerializeField] private Transform[] spawns;
-    [SerializeField] private Transform[] hSpawns;
-    [SerializeField] private Transform[] transcends;
-    private Dictionary<GameObject, Transform> transcendSpawnMap;
-    private Dictionary<GameObject, Transform> transcendHspawnMap;
-    [SerializeField] private Transform[] floors;
-    private Dictionary<GameObject, Transform> transcendFloorLimitMap;
+
+    [SerializeField] private GameObject gameManager;
+    private LevelManager levelManager;
     
     public float speed;
     public float jumpPower;
@@ -44,33 +41,14 @@ public class PlayerMovement : MonoBehaviour
         body.gravityScale = default_gravity;
 
         cameraController = cameraHolder.GetComponent<CameraController>();
+        levelManager = gameManager.GetComponent<LevelManager>();
 
-        transcendSpawnMap = new Dictionary<GameObject, Transform>
-        {
-            { transcends[0].gameObject, spawns[1] }
-        };
-
-        transcendHspawnMap = new Dictionary<GameObject, Transform>
-        {
-            { transcends[0].gameObject, hSpawns[1] }
-        };
-
-        transcendFloorLimitMap = new Dictionary<GameObject, Transform>
-        {
-            { transcends[0].gameObject, floors[1]}
-        };
-
-        // Dealing with first spawn
-        if (!hardMode)
-        {
-            revivePos = adjustSpawnPosition(spawns[0].position);
-        }
-        else
-        {
-            revivePos = adjustSpawnPosition(hSpawns[0].position);
-        }
+        // Dealing with initial spawn
+        Level initialLevel = levelManager.levels[0];
+        revivePos = adjustSpawnPosition(initialLevel.spawn.position);
         transform.localPosition = revivePos;
-        cameraController.changeFloorLimit(adjustFloorLimit(floors[0]));
+        cameraController.changeFloorLimit(adjustFloorLimit(initialLevel.ground));
+        cameraController.changeWallLimit(adjustWallMinLimit(initialLevel.wallMinLimit), adjustWallMaxLimit(initialLevel.wallMaxLimit));
     }
 
     private void Update()
@@ -78,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
         if (dying)
             return;
 
-        // horizontal movement
+        // horizontal movement  
         horizontalInput = Input.GetAxis("Horizontal");
 
         // flipping character
@@ -194,42 +172,38 @@ public class PlayerMovement : MonoBehaviour
         return new Vector3(originalPosition.x, originalPosition.y + 2.228477f - 1, originalPosition.z);
     }
 
-    private float adjustFloorLimit(Transform floor)
+    private float adjustFloorLimit(Transform floor) //So camera doesn't show beneath floor
     {
-        return floor.localScale.y + floor.position.y + 1; // Y-Size of ground + y position of ground + playerheight DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
+        return 2 + floor.position.y + 1; // Y-Size of ground + y position of ground + playerheight DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
     }
 
-    public void transcend(GameObject transcendLevel)
+    private float adjustWallMinLimit(Transform wallMinLimit)
     {
-        if (!hardMode)
+        return wallMinLimit.position.x + 13;
+    }
+
+    private float adjustWallMaxLimit(Transform wallMaxLimit)
+    {
+        return wallMaxLimit.position.x - 13;
+    }
+
+    public void transcend(GameObject transcendObject)
+    {
+        foreach (Level level in levelManager.levels)
         {
-            if (transcendSpawnMap.TryGetValue(transcendLevel, out Transform spawnTransform))
+            if (level.transcend == transcendObject)
             {
-                revivePos = adjustSpawnPosition(spawnTransform.position);
+                Transform spawnPoint = hardMode ? level.hardSpawn : level.spawn;
+                revivePos = adjustSpawnPosition(spawnPoint.position);
                 transform.localPosition = revivePos;
-            } else
-            {
-                Debug.LogWarning("Transcend level not mapped to a spawn point.");
-            }
-        } else
-        {
-            if (transcendHspawnMap.TryGetValue(transcendLevel, out Transform hSpawnTransform))
-            {
-                revivePos = adjustSpawnPosition(hSpawnTransform.position);
-                transform.localPosition = revivePos;
-            } else
-            {
-                Debug.LogWarning("Transcend level not mapped to a spawn point.");
+
+                cameraController.changeFloorLimit(adjustFloorLimit(level.ground));
+                cameraController.changeWallLimit(adjustWallMinLimit(level.wallMinLimit), adjustWallMaxLimit(level.wallMaxLimit));
+
+                return;
             }
         }
 
-        if (transcendFloorLimitMap.TryGetValue(transcendLevel, out Transform floor))
-        {
-            float floorLimit = adjustFloorLimit(floor);
-            cameraController.changeFloorLimit(floorLimit);
-        } else
-        {
-            Debug.LogWarning("Transcend level not mapped to a floor limit.");
-        }
+        Debug.LogWarning("Transcend object not found in any level.");
     }
 }

@@ -1,0 +1,2 @@
+Turn statue if hard mode
+Make min floor into independent empty game object (like how I did so with wall limits)
