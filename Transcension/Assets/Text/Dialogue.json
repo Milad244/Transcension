@@ -1,0 +1,16 @@
+{
+  "Dialogue": [
+    {
+      "key": "intro",
+      "lines": ["WOW THIS IS AN INTRO DIALOGUE!", "NO SHOT", "Finito"]
+    },
+    {
+      "key": "jump",
+      "lines": ["Jump by pressing space.", "Not that it will do you any good."]
+    },
+    {
+      "key": "TBD",
+      "lines": ["TBD"]
+    }
+  ]
+}

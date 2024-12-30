@@ -1,2 +1,3 @@
 Turn statue if hard mode
-Make min floor into independent empty game object (like how I did so with wall limits)
+Make min floor into independent empty game object (like how I did so with wall limits) - Undecided if good idea
+Add playermovement function for dialogue (like how I did with dying and maybe even combine them or smt)
