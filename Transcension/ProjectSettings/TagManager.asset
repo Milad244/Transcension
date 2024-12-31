@@ -10,6 +10,7 @@ TagManager:
   - Transcend
   - MTrigger
   - Mine
+  - Dialogue
   layers:
   - Default
   - TransparentFX

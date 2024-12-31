@@ -31,8 +31,6 @@ public class PlayerMovement : MonoBehaviour
     private bool dying;
     private Vector3 revivePos;
 
-
-
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -45,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Dealing with initial spawn
         Level initialLevel = levelManager.levels[0];
-        revivePos = adjustSpawnPosition(initialLevel.spawn.position);
+        revivePos = initialLevel.spawnRevive;
         transform.localPosition = revivePos;
         cameraController.changeFloorLimit(adjustFloorLimit(initialLevel.ground));
         cameraController.changeWallLimit(adjustWallMinLimit(initialLevel.wallMinLimit), adjustWallMaxLimit(initialLevel.wallMaxLimit));
@@ -167,11 +165,6 @@ public class PlayerMovement : MonoBehaviour
         dying = false;
     }
 
-    private Vector3 adjustSpawnPosition(Vector3 originalPosition)
-    {
-        return new Vector3(originalPosition.x, originalPosition.y + 2.228477f - 1, originalPosition.z);
-    }
-
     private float adjustFloorLimit(Transform floor) //So camera doesn't show beneath floor
     {
         return 2 + floor.position.y + 1; // Y-Size of ground + y position of ground + playerheight DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
@@ -193,8 +186,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (level.transcend == transcendObject)
             {
-                Transform spawnPoint = hardMode ? level.hardSpawn : level.spawn;
-                revivePos = adjustSpawnPosition(spawnPoint.position);
+                revivePos = hardMode ? level.hardSpawnRevive : level.spawnRevive;
                 transform.localPosition = revivePos;
 
                 cameraController.changeFloorLimit(adjustFloorLimit(level.ground));

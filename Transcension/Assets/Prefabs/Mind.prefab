@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 6493465388316582238}
   - component: {fileID: -9071842456806136018}
   m_Layer: 0
-  m_Name: Dia
-  m_TagString: Untagged
+  m_Name: Mind
+  m_TagString: Dialogue
   m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

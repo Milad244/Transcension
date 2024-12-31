@@ -1,3 +1,5 @@
 Turn statue if hard mode
-Make min floor into independent empty game object (like how I did so with wall limits) - Undecided if good idea
-Add playermovement function for dialogue (like how I did with dying and maybe even combine them or smt)
+Boss fight will be in game. No action in mind scene, only dialogue and some terrain.
+Need to add new ui in mind scene.
+Also need to add everything else in mind scene.
+Move global manager object (initial) to menu

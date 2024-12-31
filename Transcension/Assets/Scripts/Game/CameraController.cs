@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     private float cameraPosX;
     private float cameraPosY;
 
-    private void Update() // Change so each level has its own lower limit
+    private void Update()
     {
         if (player.position.x > posXMaxLim)
             cameraPosX = posXMaxLim;

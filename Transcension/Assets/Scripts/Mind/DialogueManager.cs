@@ -19,7 +19,7 @@ public class DialogueManager : MonoBehaviour
 {
     private Dictionary<string, List<string>> dialogues;
     [SerializeField] private TextAsset jsonDialogue;
-    [SerializeField] private UIControl uiControl;
+    //[SerializeField] private UIControl uiControl;
     private int currentLineIndex = 0;
 
     public void Awake()
@@ -69,7 +69,7 @@ public class DialogueManager : MonoBehaviour
             }
             else
             {
-                uiControl.stopDialogue();
+                //uiControl.stopDialogue();
             }
         }
     }
@@ -77,6 +77,6 @@ public class DialogueManager : MonoBehaviour
     private void DisplayCurrentLine(List<string> dialogueLines)
     {
         string currentLine = dialogueLines[currentLineIndex];
-        uiControl.writeDialogue(currentLine);
+        //uiControl.writeDialogue(currentLine);
     }
 }
