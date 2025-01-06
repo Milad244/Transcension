@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class MindTrigger : MonoBehaviour
 {
-    [SerializeField] private int mindLevel;
-    [SerializeField] private GlobalSceneManager globalSceneManager;
+    [SerializeField] private string mindLevel;
+    private GlobalSceneManager globalSceneManager;
+
+    private void Awake()
+    {
+        globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
+    }
 
     private void OnTriggerEnter2D(Collider2D col)
     {

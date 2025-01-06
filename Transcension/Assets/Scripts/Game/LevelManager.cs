@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [System.Serializable]
 public class Level
@@ -23,6 +24,20 @@ public class Level
         get
         {
             return CalculateAdjustedPosition(hardSpawn);
+        }
+    }
+
+    public float wallMinLimitX
+    {
+        get{
+            return wallMinLimit.position.x;
+        }
+    }
+
+    public float wallMaxLimitX
+    {
+        get{
+            return wallMaxLimit.position.x;
         }
     }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class UIControl : MonoBehaviour
 {
-    [SerializeField] private TextMeshPro attackCharge;
+    [SerializeField] private TextMeshProUGUI attackCharge;
 
     public void updateCharge(float charge)
     {

@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     private float wallJumpCDTimer;
     private bool dying;
     private Vector3 revivePos;
+    private GlobalSceneManager globalSceneManager;
 
     private void Awake()
     {
@@ -41,12 +42,17 @@ public class PlayerMovement : MonoBehaviour
         cameraController = cameraHolder.GetComponent<CameraController>();
         levelManager = gameManager.GetComponent<LevelManager>();
 
+        globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
+
+        // Getting level difficulty
+        setDifficulty(globalSceneManager.gameDifficulty);
+
         // Dealing with initial spawn
         Level initialLevel = levelManager.levels[0];
         revivePos = initialLevel.spawnRevive;
         transform.localPosition = revivePos;
         cameraController.changeFloorLimit(adjustFloorLimit(initialLevel.ground));
-        cameraController.changeWallLimit(adjustWallMinLimit(initialLevel.wallMinLimit), adjustWallMaxLimit(initialLevel.wallMaxLimit));
+        cameraController.changeWallLimit(initialLevel.wallMinLimitX, initialLevel.wallMaxLimitX);
     }
 
     private void Update()
@@ -170,16 +176,6 @@ public class PlayerMovement : MonoBehaviour
         return 2 + floor.position.y + 1; // Y-Size of ground + y position of ground + playerheight DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
     }
 
-    private float adjustWallMinLimit(Transform wallMinLimit)
-    {
-        return wallMinLimit.position.x + 13;
-    }
-
-    private float adjustWallMaxLimit(Transform wallMaxLimit)
-    {
-        return wallMaxLimit.position.x - 13;
-    }
-
     public void transcend(GameObject transcendObject)
     {
         foreach (Level level in levelManager.levels)
@@ -190,12 +186,23 @@ public class PlayerMovement : MonoBehaviour
                 transform.localPosition = revivePos;
 
                 cameraController.changeFloorLimit(adjustFloorLimit(level.ground));
-                cameraController.changeWallLimit(adjustWallMinLimit(level.wallMinLimit), adjustWallMaxLimit(level.wallMaxLimit));
+                cameraController.changeWallLimit(level.wallMinLimitX, level.wallMaxLimitX);
 
                 return;
             }
         }
 
         Debug.LogWarning("Transcend object not found in any level.");
+    }
+
+    public void setDifficulty(string difficulty)
+    {
+        if (difficulty.Equals("easy"))
+        {
+            hardMode = false;
+        } else
+        {
+            hardMode = true;
+        }
     }
 }

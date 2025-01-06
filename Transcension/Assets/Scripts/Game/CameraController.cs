@@ -2,21 +2,22 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform player;
-    [SerializeField] private float posXMaxLim;
-    [SerializeField] private float posXMinLim;
+    private float posXMaxLim;
+    private float posXMinLim;
     private float floorLimit;
     private float cameraPosX;
     private float cameraPosY;
 
     private void Update()
     {
-        if (player.position.x > posXMaxLim)
+        cameraPosX = player.position.x;
+
+        if (cameraPosX > posXMaxLim)
             cameraPosX = posXMaxLim;
-        else if (player.position.x < posXMinLim)
+        else if (cameraPosX < posXMinLim)
             cameraPosX = posXMinLim;
-        else
-            cameraPosX = player.position.x;
 
         
         if (player.position.y < floorLimit + 2) 
@@ -32,9 +33,13 @@ public class CameraController : MonoBehaviour
         this.floorLimit = floorLimit;
     }
 
-    public void changeWallLimit(float posXMinLim, float posXMaxLim)
+    public void changeWallLimit(float posXMinLim_, float posXMaxLim_)
     {
-        this.posXMinLim = posXMinLim;
-        this.posXMaxLim = posXMaxLim;
+        // Get the width of the camera's orthographic view
+        float cameraHalfWidth = mainCamera.orthographicSize * mainCamera.aspect;
+
+        // Adjust the limits so the camera's edges don't pass the wall boundaries
+        posXMinLim = posXMinLim_ + cameraHalfWidth; // Left edge of the camera
+        posXMaxLim = posXMaxLim_ - cameraHalfWidth; // Right edge of the camera
     }
 }

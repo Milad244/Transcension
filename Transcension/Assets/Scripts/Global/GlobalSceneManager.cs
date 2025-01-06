@@ -7,6 +7,7 @@ public class GlobalSceneManager : MonoBehaviour
 
     private bool isPaused = false;
     private string pausedSceneName;
+    public string gameDifficulty = "easy"; // Default difficulty incase bugs
 
     private void Awake()
     {
@@ -19,6 +20,18 @@ public class GlobalSceneManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void playNewGame(string difficulty)
+    {
+        gameDifficulty = difficulty;
+        SceneManager.LoadScene("Game");
+    }
+
+    public void continueGame()
+    {
+        // TBD
+        SceneManager.LoadScene("Game");
     }
 
     public void EnterMindScene(string mindSceneName)
