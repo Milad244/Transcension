@@ -4,11 +4,11 @@ public class MindSceneManager : MonoBehaviour
 {
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             if (GlobalSceneManager.Instance != null)
             {
-                GlobalSceneManager.Instance.ExitMindScene("Mind");
+                GlobalSceneManager.Instance.unloadMindScene();
             }
             else
             {

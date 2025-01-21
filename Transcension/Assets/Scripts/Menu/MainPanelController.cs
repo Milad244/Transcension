@@ -66,6 +66,6 @@ public class MainPanelController : MonoBehaviour
 
     public void playNewGame(string difficulty)
     {
-        globalSceneManager.playNewGame(difficulty);
+        globalSceneManager.startNewGame(difficulty);
     }
 }

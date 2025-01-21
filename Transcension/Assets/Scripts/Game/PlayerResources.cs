@@ -9,15 +9,20 @@ public class PlayerResources : MonoBehaviour
     private bool canTranscend;
     private GameObject transcendLevel;
     private List<GameObject> deactiveMineTriggers;
+    private GlobalSceneManager globalSceneManager;
 
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
         deactiveMineTriggers = new List<GameObject>();
+        globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
     }
 
     private void Update()
     {
+        if (globalSceneManager.isBlocked)
+            return;
+
         if (canTranscend && Input.GetKeyDown(KeyCode.F))
         {
             playerMovement.transcend(transcendLevel);

@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (dying)
+        if (dying || globalSceneManager.isBlocked)
             return;
 
         // horizontal movement  
@@ -154,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool canAttack()
     {
-        return !onWall() && !dying;
+        return !onWall() && !dying && !globalSceneManager.isBlocked;
     }
 
     public void dieMovement()
