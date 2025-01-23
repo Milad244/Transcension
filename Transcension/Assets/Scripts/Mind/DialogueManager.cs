@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 [Serializable]
@@ -15,15 +16,21 @@ public class DialogueData
     public List<DialogueEntry> Dialogue;
 }
 
-public class DialogueManager : MonoBehaviour
+public class DialogueManager : MonoBehaviour // this entire script is not even close to functional btw.
 {
     private Dictionary<string, List<string>> dialogues;
     [SerializeField] private TextAsset jsonDialogue;
-    //[SerializeField] private UIControl uiControl;
+    [SerializeField] private TextMeshProUGUI playerDia1; //choice 1
+    [SerializeField] private TextMeshProUGUI playerDia2; // choice 2
+    [SerializeField] private TextMeshProUGUI mindDia;
     private int currentLineIndex = 0;
 
     public void Awake()
     {
+        //playerDia1.SetText("");
+        //playerDia2.SetText("");
+        //mindDia.SetText("");
+
         // Parsing JSON Dialogue
         if (jsonDialogue == null)
         {
@@ -45,6 +52,27 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("endMind?");
+            endMind(); // Will add next dialogue here later NextLine();
+        }
+    }
+
+    private void endMind()
+    {
+        if (GlobalSceneManager.Instance != null)
+        {
+            GlobalSceneManager.Instance.unloadMindScene();
+        }
+        else
+        {
+            Debug.LogError("GlobalSceneManager instance not found!");
+        }
+    }
+
     public void playDialogue(String dialogueName)
     {
         if (dialogues.TryGetValue(dialogueName, out List<string> dialogueLines))
@@ -58,7 +86,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void NextLine(string dialogueName) // Called from outside this script after player 'continues' the dialogue
+    public void NextLine(string dialogueName)
     {
         if (dialogues.TryGetValue(dialogueName, out List<string> dialogueLines))
         {
@@ -69,7 +97,7 @@ public class DialogueManager : MonoBehaviour
             }
             else
             {
-                //uiControl.stopDialogue();
+                endMind();
             }
         }
     }

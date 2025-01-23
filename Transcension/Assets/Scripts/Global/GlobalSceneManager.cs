@@ -46,6 +46,11 @@ public class GlobalSceneManager : MonoBehaviour
 
     public void enterMenu()
     {
+        // Dealing with enterMenu when in Mind (Abs pause)
+        if (isAbsPaused)
+        {
+            unloadMindScene();
+        }
         SceneManager.LoadScene((int)SceneName.Menu);
     }
 

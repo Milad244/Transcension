@@ -1,16 +1,55 @@
 {
-  "Dialogue": [
-    {
-      "key": "intro",
-      "lines": ["WOW THIS IS AN INTRO DIALOGUE!", "NO SHOT", "Finito"]
-    },
-    {
-      "key": "jump",
-      "lines": ["Jump by pressing space.", "Not that it will do you any good."]
-    },
-    {
-      "key": "TBD",
-      "lines": ["TBD"]
+  "Dialogue": {
+    "intro": {
+      "dialogueTree": [
+        {
+          "id": 1,
+          "diaType": "player",
+          "options": [
+            {
+              "text": "Where am I?",
+              "nextId": 2
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "diaType": "mind",
+          "dialogue": "In captivity.",
+          "options": [
+            {
+              "text": "Who are you?",
+              "nextId": 3
+            },
+            {
+              "text": "Then I'll just have to escape.",
+              "nextId": 4
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "diaType": "mind",
+          "dialogue": "I am your better judgement. Listen here, and listen close. Stay behind those walls and you shall never suffer.",
+          "options": [
+            {
+              "text": "...",
+              "nextId": -1
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "diaType": "mind",
+          "dialogue": "Try as you might but you can never escape yourself.",
+          "options": [
+            {
+              "text": "...",
+              "nextId": -1
+            }
+          ]
+        }
+      ]
     }
-  ]
+  }
 }
