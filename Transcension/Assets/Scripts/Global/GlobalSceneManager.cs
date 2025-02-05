@@ -11,7 +11,7 @@ public class GlobalSceneManager : MonoBehaviour
     public bool isBlocked = false; // For any blocking of actions
     public string gameDifficulty { get; private set; } = "easy"; // Default difficulty incase bugs
     private float resumeDelay = 0.1f;
-
+    public string diaLevel { get; private set; }
     public enum SceneName
     {
         Menu = 0,
@@ -54,10 +54,11 @@ public class GlobalSceneManager : MonoBehaviour
         SceneManager.LoadScene((int)SceneName.Menu);
     }
 
-    public void loadMindScene()
+    public void loadMindScene(string diaLevel)
     {
         if (!isPaused && !isAbsPaused)
         {
+            this.diaLevel = diaLevel;
             absPause();
             SceneManager.LoadScene((int)SceneName.Mind, LoadSceneMode.Additive);
         }

@@ -15,8 +15,7 @@ public class MindTrigger : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
-            Debug.Log($"Scene to mind level {mindLevel}"); //Adding later
-            globalSceneManager.loadMindScene();
+            globalSceneManager.loadMindScene(mindLevel);
             Destroy(gameObject);
         }
     }

@@ -15,34 +15,34 @@
         },
         {
           "id": 2,
-          "dialogue": "In captivity.",
+          "dialogue": "In captivity",
           "options": [
             {
               "text": "Who are you?",
               "nextId": 3
             },
             {
-              "text": "Then I'll just have to escape.",
+              "text": "Then I'll just have to escape",
               "nextId": 4
             }
           ]
         },
         {
           "id": 3,
-          "dialogue": "I am your better judgment. Listen here, and listen close. Stay behind these walls and you shall never suffer.",
+          "dialogue": "I am your better judgment. Listen here, and listen close. Stay behind these walls and you shall never suffer",
           "options": [
             {
-              "text": "...",
+              "text": " ...",
               "nextId": -1
             }
           ]
         },
         {
           "id": 4,
-          "dialogue": "Try as you might, but you can never escape yourself.",
+          "dialogue": "Try as you might, but you can never escape yourself",
           "options": [
             {
-              "text": "...",
+              "text": " ...",
               "nextId": -1
             }
           ]
@@ -50,8 +50,63 @@
       ]
     },
     {
-      "key": "turn",
-      "dialogueTree": []
+      "key": "tran1",
+      "dialogueTree": [
+        {
+          "id": 1,
+          "dialogue": "",
+          "options": [
+            {
+              "text": "Made it bitch",
+              "nextId": 2
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "dialogue": "You are truly pitiful. What is one step to an infinite staircase?",
+          "options": [
+            {
+              "text": "One step",
+              "nextId": 3
+            },
+            {
+              "text": "It is a step you would never take",
+              "nextId": 4
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "dialogue": "Once you submit to me, grovelling on the ground and begging for your pain to end, we'll see if your shameful humor remains",
+          "options": [
+            {
+              "text": " ...",
+              "nextId": -1
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "dialogue": "Finally something we agree on",
+          "options": [
+            {
+              "text": "That doesn't make you strong that makes you weak",
+              "nextId": 5
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "dialogue": "I would rather be weak then as shameful as you",
+          "options": [
+            {
+              "text": " ...",
+              "nextId": -1
+            }
+          ]
+        }
+      ]
     }
   ]
 }
