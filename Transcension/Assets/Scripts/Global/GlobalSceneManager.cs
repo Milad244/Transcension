@@ -9,7 +9,8 @@ public class GlobalSceneManager : MonoBehaviour
     private bool isPaused = false; // For in-scene pause
     private bool isAbsPaused = false; // For outside-scene pause
     public bool isBlocked = false; // For any blocking of actions
-    public string gameDifficulty { get; private set; } = "easy"; // Default difficulty incase bugs
+    public string gameDifficulty { get; private set; } = "easy"; // Default difficulty
+    public int initialLevel = 0;
     private float resumeDelay = 0.1f;
     public string diaLevel { get; private set; }
     public enum SceneName
@@ -97,8 +98,8 @@ public class GlobalSceneManager : MonoBehaviour
 
     public void resumeAbsPause()
     {
-        Time.timeScale = 1f;
         toggleRootGameObjects(true);
+        Time.timeScale = 1f;
         isAbsPaused = false;
         StartCoroutine(resumeWithDelay());
     }

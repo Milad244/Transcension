@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     private bool dying;
     private Vector3 revivePos;
     private GlobalSceneManager globalSceneManager;
+    private int initialLevel; 
 
     private void Awake()
     {
@@ -46,13 +47,10 @@ public class PlayerMovement : MonoBehaviour
 
         // Getting level difficulty
         setDifficulty(globalSceneManager.gameDifficulty);
+        initialLevel = globalSceneManager.initialLevel;
 
         // Dealing with initial spawn
-        Level initialLevel = levelManager.levels[0];
-        revivePos = initialLevel.spawnRevive;
-        transform.localPosition = revivePos;
-        cameraController.changeFloorLimit(adjustFloorLimit(initialLevel.ground));
-        cameraController.changeWallLimit(initialLevel.wallMinLimitX, initialLevel.wallMaxLimitX);
+        loadLevel(levelManager.levels[initialLevel]);
     }
 
     private void Update()
@@ -176,19 +174,27 @@ public class PlayerMovement : MonoBehaviour
         return 2 + floor.position.y + 1; // Y-Size of ground + y position of ground + playerheight DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
     }
 
+    public void loadLevel(Level level)
+    {
+        revivePos = hardMode ? level.hardSpawnRevive : level.spawnRevive;
+        transform.localPosition = revivePos;
+
+        cameraController.changeFloorLimit(adjustFloorLimit(level.ground));
+        cameraController.changeWallLimit(level.wallMinLimitX, level.wallMaxLimitX);
+
+        if (!level.mindLevel.Equals("")){
+            globalSceneManager.loadMindScene(level.mindLevel);
+        }
+        return;
+    }
+
     public void transcend(GameObject transcendObject)
     {
         foreach (Level level in levelManager.levels)
         {
             if (level.transcend == transcendObject)
             {
-                revivePos = hardMode ? level.hardSpawnRevive : level.spawnRevive;
-                transform.localPosition = revivePos;
-
-                cameraController.changeFloorLimit(adjustFloorLimit(level.ground));
-                cameraController.changeWallLimit(level.wallMinLimitX, level.wallMaxLimitX);
-
-                return;
+                loadLevel(level);
             }
         }
 

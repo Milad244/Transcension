@@ -10,6 +10,7 @@ public class Level
     public Transform wallMinLimit;
     public Transform wallMaxLimit;
     public GameObject transcend;
+    public string mindLevel;
 
     public Vector3 spawnRevive
     {
