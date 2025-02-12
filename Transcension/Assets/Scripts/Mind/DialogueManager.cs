@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using System.Collections;
 
 public class DialogueManager : MonoBehaviour // this entire script is not even close to functional btw.
 {
@@ -22,6 +23,8 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
     private int playerOptionIndex = 0;
     private bool choice;
     private GlobalSceneManager globalSceneManager;
+    private float diaWriteCD = 0.5f;
+    private Coroutine dialogueCoroutine;
 
     public void Awake()
     {
@@ -35,6 +38,7 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
+            // ToDo: make sure you can't continue until dialogue is finished writing
             selectOption();
         }
 
@@ -88,7 +92,14 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
         }
 
         DialogueNode node = dialogueNodes[id];
-        mindDia.SetText(node.dialogue);
+
+        if (dialogueCoroutine != null)
+        {
+            Debug.Log("This does not ever print");
+            StopCoroutine(dialogueCoroutine);  // Stop any previous coroutine
+        }
+
+        dialogueCoroutine = StartCoroutine(writeDialogue());//node.dialogue
 
         if (node.options.Count == 1)
         {
@@ -106,6 +117,23 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
             playerChoice1Dia.SetText(node.options[0].text);
             playerChoice2Dia.SetText(node.options[1].text);
         }
+    }
+
+    IEnumerator writeDialogue()//string dialogue
+    {
+        // string dialogueWriting = "";
+        // string test = "Test";
+        // Debug.Log(dialogue);
+        // foreach(char character in test){
+        //     Debug.Log(character);
+        //     dialogueWriting += character;
+        //     mindDia.SetText(dialogueWriting);
+        //     //yield return new WaitForSeconds(diaWriteCD);
+        //     Debug.Log(character);
+        // }
+        Debug.Log("Starting");
+        yield return new WaitForSeconds(1);
+        Debug.Log("Finished");
     }
 
     public void changeUserChoice(int newPlayerOptionIndex)
