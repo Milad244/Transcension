@@ -23,7 +23,7 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
     private int playerOptionIndex = 0;
     private bool choice;
     private GlobalSceneManager globalSceneManager;
-    private float diaWriteCD = 0.5f;
+    private float diaWriteCD = 0.02f;
     private Coroutine dialogueCoroutine;
 
     public void Awake()
@@ -95,11 +95,10 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
 
         if (dialogueCoroutine != null)
         {
-            Debug.Log("This does not ever print");
             StopCoroutine(dialogueCoroutine);  // Stop any previous coroutine
         }
 
-        dialogueCoroutine = StartCoroutine(writeDialogue());//node.dialogue
+        dialogueCoroutine = StartCoroutine(writeDialogue(node.dialogue));
 
         if (node.options.Count == 1)
         {
@@ -119,21 +118,19 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
         }
     }
 
-    IEnumerator writeDialogue()//string dialogue
+    IEnumerator writeDialogue(string dialogue)
     {
-        // string dialogueWriting = "";
-        // string test = "Test";
-        // Debug.Log(dialogue);
-        // foreach(char character in test){
-        //     Debug.Log(character);
-        //     dialogueWriting += character;
-        //     mindDia.SetText(dialogueWriting);
-        //     //yield return new WaitForSeconds(diaWriteCD);
-        //     Debug.Log(character);
-        // }
-        Debug.Log("Starting");
-        yield return new WaitForSeconds(1);
-        Debug.Log("Finished");
+        string dialogueWriting = "";
+        foreach(char character in dialogue){
+            dialogueWriting += character;
+            mindDia.SetText(dialogueWriting);
+            yield return new WaitForSeconds(diaWriteCD);
+        }
+    }
+
+    public void writeNext(string dialogueWriting)
+    {
+        mindDia.SetText(dialogueWriting);
     }
 
     public void changeUserChoice(int newPlayerOptionIndex)
@@ -190,7 +187,7 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
     {
         if (GlobalSceneManager.Instance != null)
         {
-            GlobalSceneManager.Instance.unloadMindScene();
+            GlobalSceneManager.Instance.continueGame();
         }
         else
         {

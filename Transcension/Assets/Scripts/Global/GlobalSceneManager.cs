@@ -6,11 +6,9 @@ public class GlobalSceneManager : MonoBehaviour
 {
     public static GlobalSceneManager Instance { get; private set; }
 
-    private bool isPaused = false; // For in-scene pause
-    private bool isAbsPaused = false; // For outside-scene pause
     public bool isBlocked = false; // For any blocking of actions
     public string gameDifficulty { get; private set; } = "easy"; // Default difficulty
-    public int initialLevel = 0;
+    public int level = 0;
     private float resumeDelay = 0.1f;
     public string diaLevel { get; private set; }
     public enum SceneName
@@ -36,6 +34,7 @@ public class GlobalSceneManager : MonoBehaviour
     public void startNewGame(string difficulty)
     {
         gameDifficulty = difficulty;
+        level = 0;
         SceneManager.LoadScene((int)SceneName.Game);
     }
 
@@ -47,60 +46,24 @@ public class GlobalSceneManager : MonoBehaviour
 
     public void enterMenu()
     {
-        // Dealing with enterMenu when in Mind (Abs pause)
-        if (isAbsPaused)
-        {
-            unloadMindScene();
-        }
         SceneManager.LoadScene((int)SceneName.Menu);
     }
 
     public void loadMindScene(string diaLevel)
     {
-        if (!isPaused && !isAbsPaused)
-        {
-            this.diaLevel = diaLevel;
-            absPause();
-            SceneManager.LoadScene((int)SceneName.Mind, LoadSceneMode.Additive);
-        }
-    }
-
-    public void unloadMindScene()
-    {
-        if (isAbsPaused)
-        {
-            SceneManager.UnloadSceneAsync((int)SceneName.Mind);
-            resumeAbsPause();
-        }
+        this.diaLevel = diaLevel;
+        SceneManager.LoadScene((int)SceneName.Mind);
     }
 
     public void pauseScene()
     {
         Time.timeScale = 0f;
-        isPaused = true;
         isBlocked = true;
     }
 
     public void resumeScene()
     {
         Time.timeScale = 1f;
-        isPaused = false;
-        StartCoroutine(resumeWithDelay());
-    }
-
-    public void absPause()
-    {
-        Time.timeScale = 0f;
-        toggleRootGameObjects(false);
-        isAbsPaused = true;
-        isBlocked = true;
-    }
-
-    public void resumeAbsPause()
-    {
-        toggleRootGameObjects(true);
-        Time.timeScale = 1f;
-        isAbsPaused = false;
         StartCoroutine(resumeWithDelay());
     }
 
@@ -109,14 +72,5 @@ public class GlobalSceneManager : MonoBehaviour
     {
         yield return new WaitForSeconds(resumeDelay);
         isBlocked = false; // Allow input after the delay
-    }
-
-    // Helper method to enable/disable root game objects
-    private void toggleRootGameObjects(bool isActive)
-    {
-        foreach (GameObject obj in SceneManager.GetActiveScene().GetRootGameObjects())
-        {
-            obj.SetActive(isActive);
-        }
     }
 }

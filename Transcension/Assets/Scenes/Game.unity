@@ -5304,21 +5304,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levels:
-  - ground: {fileID: 688461980}
+  - level: 0
+    ground: {fileID: 688461980}
     spawn: {fileID: 551073896}
     hardSpawn: {fileID: 551073896}
     wallMinLimit: {fileID: 839435980}
     wallMaxLimit: {fileID: 1712507598}
     transcend: {fileID: 0}
     mindLevel: 
-  - ground: {fileID: 331652548}
+  - level: 1
+    ground: {fileID: 331652548}
     spawn: {fileID: 932704192}
     hardSpawn: {fileID: 1905979925}
     wallMinLimit: {fileID: 1508196154}
     wallMaxLimit: {fileID: 1598990231}
     transcend: {fileID: 1986649344}
     mindLevel: intro
-  - ground: {fileID: 1408325292}
+  - level: 2
+    ground: {fileID: 1408325292}
     spawn: {fileID: 592468404}
     hardSpawn: {fileID: 869067947}
     wallMinLimit: {fileID: 1508196154}
@@ -6329,7 +6332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isBlocked: 0
-  initialLevel: 0
+  level: 0
 --- !u!4 &953738390
 Transform:
   m_ObjectHideFlags: 0

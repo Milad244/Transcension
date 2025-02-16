@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -47,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Getting level difficulty
         setDifficulty(globalSceneManager.gameDifficulty);
-        initialLevel = globalSceneManager.initialLevel;
+        initialLevel = globalSceneManager.level;
 
         // Dealing with initial spawn
         loadLevel(levelManager.levels[initialLevel]);
@@ -182,7 +178,7 @@ public class PlayerMovement : MonoBehaviour
         cameraController.changeFloorLimit(adjustFloorLimit(level.ground));
         cameraController.changeWallLimit(level.wallMinLimitX, level.wallMaxLimitX);
 
-        if (!level.mindLevel.Equals("")){
+        if (!level.mindLevel.Equals("") && initialLevel != level.level){
             globalSceneManager.loadMindScene(level.mindLevel);
         }
         return;
@@ -194,7 +190,9 @@ public class PlayerMovement : MonoBehaviour
         {
             if (level.transcend == transcendObject)
             {
+                globalSceneManager.level = level.level;
                 loadLevel(level);
+                break;
             }
         }
 

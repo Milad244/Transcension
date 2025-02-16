@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [System.Serializable]
 public class Level
 {
+    public int level;
     public Transform ground;
     public Transform spawn;
     public Transform hardSpawn;

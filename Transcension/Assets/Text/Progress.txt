@@ -6,3 +6,5 @@ Move global manager object (initial) to menu
 GIF background in main menu (maybe)
 Self doubt starts mean and confident but progressively gets more angry and out of control
 Add fade to black effect after each loop in menu
+
+MAKE MIND BE A TOTALLY DIFFERENT SCENE
