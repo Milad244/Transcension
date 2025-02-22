@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private bool dying;
     private Vector3 revivePos;
     private GlobalSceneManager globalSceneManager;
+    [SerializeField] private UIControl uiControl;
     private int initialLevel; 
 
     private void Awake()
@@ -179,6 +180,7 @@ public class PlayerMovement : MonoBehaviour
         cameraController.changeWallLimit(level.wallMinLimitX, level.wallMaxLimitX);
 
         if (!level.mindLevel.Equals("") && initialLevel != level.level){
+            uiControl.mindTransition();
             globalSceneManager.loadMindScene(level.mindLevel);
         }
         return;

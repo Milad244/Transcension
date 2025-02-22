@@ -118,7 +118,7 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
         }
     }
 
-    IEnumerator writeDialogue(string dialogue)
+    private IEnumerator writeDialogue(string dialogue)
     {
         string dialogueWriting = "";
         foreach(char character in dialogue){
