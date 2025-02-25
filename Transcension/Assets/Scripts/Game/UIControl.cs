@@ -16,6 +16,6 @@ public class UIControl : MonoBehaviour
     public void mindTransition()
     {   
         transitionPanel.SetActive(true);
-        transitionText.SetText("Entering Mind");
+        transitionText.SetText("");
     }
 }

@@ -97,6 +97,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isGrounded()) // regular jump
         {
+            //Debug.DrawLine(boxCollider.bounds.center, boxCollider.bounds.center + Vector3.down, Color.red, 2f);
             body.linearVelocity = new Vector2(body.linearVelocity.x, jumpPower);
             anim.SetTrigger("jump");
         }
@@ -121,7 +122,9 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isGrounded()
     {
-        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, groundLayer);
+        float rayLength = 0.1f;
+        Vector2 rayOrigin = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.min.y);
+        RaycastHit2D rayCastHit = Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, groundLayer);
         return rayCastHit.collider != null;
     }
 
