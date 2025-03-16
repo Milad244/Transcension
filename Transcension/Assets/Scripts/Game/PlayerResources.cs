@@ -10,6 +10,7 @@ public class PlayerResources : MonoBehaviour
     private GameObject transcendLevel;
     private List<GameObject> deactiveMineTriggers;
     private GlobalSceneManager globalSceneManager;
+    [SerializeField] private UIControl uiControl;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class PlayerResources : MonoBehaviour
         if (canTranscend && Input.GetKeyDown(KeyCode.F))
         {
             playerMovement.transcend(transcendLevel);
+            uiControl.closeTip();
         }
     }
     private void OnTriggerEnter2D(Collider2D col)
@@ -38,6 +40,10 @@ public class PlayerResources : MonoBehaviour
         {
             canTranscend = true;
             transcendLevel = colGameObj;
+
+            if (globalSceneManager.level == 0) {
+                uiControl.showTip(UIControl.TipType.Transcending);
+            }
         } 
 
         if (col.CompareTag("MTrigger"))
