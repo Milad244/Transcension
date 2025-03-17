@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class UIControl : MonoBehaviour
         { TipType.Transcending, "Press 'F' to transcend" },
     };
 
-    private HashSet<string> finishedTips = new HashSet<string>();
+    public HashSet<string> finishedTips = new HashSet<string>();
     private string currentTip;
 
     public void updateCharge(float charge)
@@ -40,7 +41,9 @@ public class UIControl : MonoBehaviour
 
         string tipMessage = tips[tipType];
 
-        if (!finishedTips.Contains(tipMessage)) {
+        if (tipMessage == currentTip) {
+            closeTip();
+        } else if (!finishedTips.Contains(tipMessage)){
             currentTip = tipMessage;
             tipText.gameObject.SetActive(true);
             tipText.SetText(tipMessage);

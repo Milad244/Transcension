@@ -97,7 +97,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isGrounded()) // regular jump
         {
-            //Debug.DrawLine(boxCollider.bounds.center, boxCollider.bounds.center + Vector3.down, Color.red, 2f);
             body.linearVelocity = new Vector2(body.linearVelocity.x, jumpPower);
             anim.SetTrigger("jump");
         }
