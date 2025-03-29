@@ -17,7 +17,6 @@ public class PlayerMovement : MonoBehaviour
     public float ceilingPushPower;
     public float default_gravity;
     public float wallJumpCD;
-    public bool hardMode;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask climbWallLayer;
     [SerializeField] private LayerMask pushCeilingLayer;
@@ -28,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 revivePos;
     private GlobalSceneManager globalSceneManager;
     [SerializeField] private UIControl uiControl;
-    private int initialLevel; 
+    private int initialLevel;
 
     private void Awake()
     {
@@ -42,8 +41,6 @@ public class PlayerMovement : MonoBehaviour
 
         globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
 
-        // Getting level difficulty
-        setDifficulty(globalSceneManager.gameDifficulty);
         initialLevel = globalSceneManager.level;
 
         // Dealing with initial spawn
@@ -175,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void loadLevel(Level level)
     {
-        revivePos = hardMode ? level.hardSpawnRevive : level.spawnRevive;
+        revivePos = level.spawnRevive;
         transform.localPosition = revivePos;
 
         cameraController.changeFloorLimit(adjustFloorLimit(level.ground));
@@ -202,15 +199,22 @@ public class PlayerMovement : MonoBehaviour
 
         Debug.LogWarning("Transcend object not found in any level.");
     }
+    
+    public void hardSpawn() {
+        int currentLevel = globalSceneManager.level;
+        Level currentLevelObject = null;
 
-    public void setDifficulty(string difficulty)
-    {
-        if (difficulty.Equals("easy"))
-        {
-            hardMode = false;
-        } else
-        {
-            hardMode = true;
+        foreach (Level level in levelManager.levels) {
+            if (level.level == currentLevel) {
+                currentLevelObject = level;
+                break;
+            }
+        }
+
+        if (currentLevelObject != null) {
+            revivePos = currentLevelObject.hardSpawnRevive;
+        } else {
+            Debug.LogWarning("Current level not found in level manager.");
         }
     }
 }

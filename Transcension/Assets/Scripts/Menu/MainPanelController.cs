@@ -5,8 +5,7 @@ public class MainPanelController : MonoBehaviour
 
     private GlobalSceneManager globalSceneManager;
     [SerializeField] private GameObject mainPage;
-    [SerializeField] private GameObject playPage1;
-    [SerializeField] private GameObject playPage2;
+    [SerializeField] private GameObject playPage;
     [SerializeField] private GameObject settingsPage;
     [SerializeField] private GameObject creditsPage;
 
@@ -17,22 +16,15 @@ public class MainPanelController : MonoBehaviour
     private void closeAll()
     {
         mainPage.SetActive(false);
-        playPage1.SetActive(false);
-        playPage2.SetActive(false);
+        playPage.SetActive(false);
         settingsPage.SetActive(false);
         creditsPage.SetActive(false);
     }
 
-    public void openPlayPage1()
+    public void openPlayPage()
     {
         closeAll();
-        playPage1.SetActive(true);
-    }
-
-    public void openPlayPage2()
-    {
-        closeAll();
-        playPage2.SetActive(true);
+        playPage.SetActive(true);
     }
 
     public void openCredits()
@@ -63,8 +55,8 @@ public class MainPanelController : MonoBehaviour
         globalSceneManager.continueGame();
     }
 
-    public void playNewGame(string difficulty)
+    public void playNewGame()
     {
-        globalSceneManager.startNewGame(difficulty);
+        globalSceneManager.startNewGame();
     }
 }

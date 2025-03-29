@@ -7,7 +7,6 @@ public class GlobalSceneManager : MonoBehaviour
     public static GlobalSceneManager Instance { get; private set; }
 
     public bool isBlocked = false; // For any blocking of actions
-    public string gameDifficulty { get; private set; } = "easy"; // Default difficulty
     public int level = 0;
     private float resumeDelay = 0.1f;
     public string diaLevel { get; private set; }
@@ -31,9 +30,8 @@ public class GlobalSceneManager : MonoBehaviour
         }
     }
 
-    public void startNewGame(string difficulty)
+    public void startNewGame()
     {
-        gameDifficulty = difficulty;
         level = 0;
         SceneManager.LoadScene((int)SceneName.Game);
     }
