@@ -1,3 +1,4 @@
+using UnityEditor.Profiling;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask climbWallLayer;
     [SerializeField] private LayerMask pushCeilingLayer;
+    [SerializeField] private LayerMask pushFloorLayer;
 
     private float horizontalInput;
     private float wallJumpCDTimer;
@@ -79,8 +81,7 @@ public class PlayerMovement : MonoBehaviour
             else
                 body.gravityScale = default_gravity; // not on wall
 
-            if(onPushCeiling())
-                ceilingPush();
+            handlePush();
 
             if (Input.GetKey(KeyCode.Space))
                 Jump();
@@ -115,6 +116,10 @@ public class PlayerMovement : MonoBehaviour
     {
         body.linearVelocity = new Vector2(body.linearVelocity.x, -ceilingPushPower);
     }
+    private void floorPush()
+    {
+        body.linearVelocity = new Vector2(body.linearVelocity.x, ceilingPushPower);
+    }
 
     private bool isGrounded()
     {
@@ -140,10 +145,15 @@ public class PlayerMovement : MonoBehaviour
         return true;
     }
 
-    private bool onPushCeiling()
+    private void handlePush()
     {
-        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, 0.1f, pushCeilingLayer);
-        return rayCastHit.collider != null;
+        RaycastHit2D rayCastCeilingHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, 0.1f, pushCeilingLayer);
+        RaycastHit2D rayCastFloorHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, pushCeilingLayer);
+        if (rayCastCeilingHit) {
+            ceilingPush();
+        } else if (rayCastFloorHit) {
+            floorPush();
+        }
     }
 
     public bool canAttack()
