@@ -163,6 +163,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void dieMovement()
     {
+        if (dying)
+            return;
         dying = true;
         body.linearVelocity = new Vector2(0, 0);
         anim.SetTrigger("die");
