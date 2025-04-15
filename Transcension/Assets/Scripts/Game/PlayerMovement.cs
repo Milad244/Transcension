@@ -51,9 +51,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (dying || globalSceneManager.isBlocked)
+        if (globalSceneManager.isBlocked)
+        {
             return;
-
+        } else if (dying)
+        {
+            // Code to check dying anim and if not happening then start it
+            if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Die") {
+                anim.SetTrigger("die");
+            }
+            return;
+        }
+            
         // horizontal movement  
         horizontalInput = Input.GetAxis("Horizontal");
 
