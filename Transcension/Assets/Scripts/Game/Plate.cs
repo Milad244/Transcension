@@ -5,11 +5,15 @@ public class Plate : MonoBehaviour
 {
     [SerializeField] private GameObject objToEnable;
     [SerializeField] private float enableTime;
+
+    private Coroutine plateCoroutine;
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.tag == "Player") {
-            StopCoroutine(activateObj());
-            StartCoroutine(activateObj());
+            if (plateCoroutine != null)
+                StopCoroutine(plateCoroutine);
+
+            plateCoroutine = StartCoroutine(activateObj());
         }
     }
 
