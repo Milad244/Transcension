@@ -3,10 +3,28 @@ using UnityEngine;
 
 public class HeadDetect : MonoBehaviour
 {
+    ParticleSystem particles;
+
+    private void Awake()
+    {
+       particles = GetComponent<ParticleSystem>();
+       activateParticles(true);
+    }
+
+    public void activateParticles(bool b)
+    {
+        if (b)
+        {
+            particles.Play();
+        } else {
+            particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+    }
 
     private void activateHead()
     {
-        transform.parent.GameObject().GetComponent<Head>().activate();
+        activateParticles(false);
+        transform.parent.GameObject().GetComponent<Head>().activate(this);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
