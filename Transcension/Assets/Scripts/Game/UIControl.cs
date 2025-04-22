@@ -20,7 +20,7 @@ public class UIControl : MonoBehaviour
     {
         { TipType.Movement, "Press 'A' and 'D' to move!" },
         { TipType.Jumping, "Press 'Space' to jump!" },
-        { TipType.Transcending, "Press 'F' to transcend" },
+        { TipType.Transcending, "Press 'F' to Transcend" },
     };
 
     public HashSet<string> finishedTips = new HashSet<string>();
