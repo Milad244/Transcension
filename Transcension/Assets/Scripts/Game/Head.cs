@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
 
 public class Head : MonoBehaviour
@@ -8,16 +8,30 @@ public class Head : MonoBehaviour
     private Animator anim;
     private HeadDetect headDetect;
     [SerializeField] private float speed;
+    private Coroutine deactivateRoutine;
+    private PlayerMovement playerMovement;
+    private bool goBack;
     private void Awake()
     {
         anim = GetComponent<Animator>();
-        oriPos = transform.localPosition;
+        oriPos = transform.position;
+        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
     }
 
-    private void deactivate()
+    private IEnumerator deactivate()
     {
-        transform.localPosition = oriPos;
         activated = false;
+        yield return new WaitForSeconds(0.5f);// delay after killing you 
+        while (Vector3.Distance(transform.position, oriPos) > 0.1f)
+        {
+            Vector3 direction = oriPos - transform.position;
+            direction.Normalize();
+            Vector3 v = direction * speed * Time.deltaTime;
+            transform.position += v;
+
+            yield return null;
+        }
+        
         anim.SetTrigger("deactivate");
         if (headDetect)
         {
@@ -25,38 +39,51 @@ public class Head : MonoBehaviour
         } else {
             Debug.LogError("HeadDetect script not found");
         }
+
+        deactivateRoutine = null;
+    }
+
+    public void startDeactivate() //called from playerResoursces
+    {
+        if (!activated) // If user dies before awake animation finishes
+        {
+            goBack = true;
+        }
+        
+        if (deactivateRoutine == null)
+        {
+            deactivateRoutine = StartCoroutine(deactivate());
+        }
     }
 
     public void activate(HeadDetect script)
     {
+        if (activated || deactivateRoutine != null || playerMovement.dying) return;
+
         headDetect = script;
-        if (!activated)
+        anim.SetTrigger("activate"); //onActivateFinished() called from the triggered animation
+    }
+
+    public void onActivateFinished()
+    {
+        if (!goBack)
         {
             activated = true;
-            anim.SetTrigger("activate");
+        } else {
+            goBack = false;
         }
     }
+
 
     private void Update()
     {
         if (activated)
         {
             Vector3 playPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-            Debug.Log(playPos);
             Vector3 direction = playPos - transform.position;
             direction.Normalize();
             Vector3 v = direction * speed * Time.deltaTime;
             transform.position += v;
-        }
-    }
-
-  void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.tag == "Player")
-        {
-            // Get direction for head killing animation
-            collision.GetComponent<PlayerResources>().die();
-            deactivate();
         }
     }
 }

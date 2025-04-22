@@ -10,8 +10,8 @@ TagManager:
   - Transcend
   - MTrigger
   - Mine
-  - Dialogue
   - Tip
+  - Head
   layers:
   - Default
   - TransparentFX
@@ -21,7 +21,7 @@ TagManager:
   - UI
   - Ground
   - ClimbWall
-  - PushCeiling
+  - Push
   - Player
   - 
   - 
@@ -63,6 +63,9 @@ TagManager:
     locked: 0
   - name: Ground
     uniqueID: 1230746627
+    locked: 0
+  - name: UI
+    uniqueID: 2713745419
     locked: 0
   m_RenderingLayers:
   - Default

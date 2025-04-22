@@ -16,6 +16,23 @@ public class GlobalSceneManager : MonoBehaviour
         Game = 1,
         Mind = 2
     }
+    public string levelPref { get; private set; } = "LevelPref";
+
+    public void setLevel(int level_)
+    {
+        level = level_;
+        PlayerPrefs.SetInt(levelPref, level);
+    }
+
+    private void getLevelForAwake()
+    {   
+        if (PlayerPrefs.HasKey(levelPref))
+        {
+            level = PlayerPrefs.GetInt(levelPref);
+        } else {
+            setLevel(0);
+        }
+    }
 
     private void Awake()
     {
@@ -23,6 +40,7 @@ public class GlobalSceneManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            getLevelForAwake();
         }
         else
         {
@@ -32,13 +50,12 @@ public class GlobalSceneManager : MonoBehaviour
 
     public void startNewGame()
     {
-        level = 0;
+        setLevel(0);
         SceneManager.LoadScene((int)SceneName.Game);
     }
 
     public void continueGame()
     {
-        // TBD
         SceneManager.LoadScene((int)SceneName.Game);
     }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainPanelController : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class MainPanelController : MonoBehaviour
     [SerializeField] private GameObject playPage;
     [SerializeField] private GameObject settingsPage;
     [SerializeField] private GameObject creditsPage;
+    [SerializeField] private Button continueBtn;
 
     private void Awake()
     {
@@ -25,6 +27,15 @@ public class MainPanelController : MonoBehaviour
     {
         closeAll();
         playPage.SetActive(true);
+        handleContinue();
+    }
+
+    private void handleContinue()
+    {
+        if (globalSceneManager.level == 0)
+        {
+            continueBtn.interactable = false;
+        }
     }
 
     public void openCredits()

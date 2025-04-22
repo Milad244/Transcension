@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIControl : MonoBehaviour
 {
@@ -57,5 +57,25 @@ public class UIControl : MonoBehaviour
             currentTip = null;
         }
         tipText.gameObject.SetActive(false);
+    }
+
+    public void transcendTipActive(bool active)
+    {
+        if (active)
+        {
+            tipText.gameObject.SetActive(true);
+            tipText.SetText(tips[TipType.Transcending]);
+        } else {
+            if (this != null)
+                Invoke(nameof(disableTipIfInGameScene), 0.1f); //Delay so if in mind scene it won't give error
+        }
+    }
+
+    private void disableTipIfInGameScene()
+    {
+        if (this != null && SceneManager.GetActiveScene().name == "Game")
+        {
+            tipText.gameObject.SetActive(false);
+        }
     }
 }

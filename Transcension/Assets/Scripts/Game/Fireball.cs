@@ -32,7 +32,7 @@ public class Fireball : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player" || collision.tag == "Fireball" || collision.tag == "Dialogue")
+        if (collision.tag == "Player" || collision.tag == "Fireball" || collision.tag == "Tip")
             return;
 
         hit = true;

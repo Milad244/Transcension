@@ -10,12 +10,14 @@ public class PlayerResources : MonoBehaviour
     private GameObject transcendLevel;
     private List<GameObject> deactiveMineTriggers;
     private GlobalSceneManager globalSceneManager;
+    private UIControl uiControl;
 
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
         deactiveMineTriggers = new List<GameObject>();
         globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
+        uiControl = GameObject.Find("Canvas UI").GetComponent<UIControl>();
     }
 
     private void Update()
@@ -36,6 +38,7 @@ public class PlayerResources : MonoBehaviour
 
         if (col.CompareTag("Transcend"))
         {
+            uiControl.transcendTipActive(true);
             canTranscend = true;
             transcendLevel = colGameObj;
         } 
@@ -46,12 +49,21 @@ public class PlayerResources : MonoBehaviour
             deactiveMineTriggers.Add(colGameObj);
             colGameObj.SetActive(false);
         }
+
+        if (col.CompareTag("Head"))
+        {
+            colGameObj.GetComponent<Head>().startDeactivate();
+            die();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D col)
     {
         if (col.CompareTag("Transcend"))
+        {
+            uiControl.transcendTipActive(false);
             canTranscend = false;
+        }
     }
 
     public void die()

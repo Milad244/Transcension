@@ -1,4 +1,3 @@
-using UnityEditor.Profiling;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -16,16 +15,11 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     public float jumpPower;
     public float ceilingPushPower;
-    public float default_gravity;
-    public float wallJumpCD;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private LayerMask climbWallLayer;
-    [SerializeField] private LayerMask pushCeilingLayer;
-    [SerializeField] private LayerMask pushFloorLayer;
+    [SerializeField] private LayerMask pushLayer;
 
     private float horizontalInput;
-    private float wallJumpCDTimer;
-    private bool dying;
+    public bool dying;
     private Vector3 revivePos;
     private GlobalSceneManager globalSceneManager;
     [SerializeField] private UIControl uiControl;
@@ -36,7 +30,6 @@ public class PlayerMovement : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
-        body.gravityScale = default_gravity;
 
         cameraController = cameraHolder.GetComponent<CameraController>();
         levelManager = gameManager.GetComponent<LevelManager>();
@@ -77,47 +70,20 @@ public class PlayerMovement : MonoBehaviour
         anim.SetBool("grounded", isGrounded());
 
         // applying movement
-        if (wallJumpCDTimer <= 0)
-        {
-            // horizontal movement
-            body.linearVelocity = new Vector2(horizontalInput * speed, body.linearVelocity.y);
+        body.linearVelocity = new Vector2(horizontalInput * speed, body.linearVelocity.y);
 
-            if (onWall() && !isGrounded()) // on wall
-            {
-                body.gravityScale = 0;
-                body.linearVelocity = Vector2.zero;
-            }
-            else
-                body.gravityScale = default_gravity; // not on wall
+        handlePush();
 
-            handlePush();
-
-            if (Input.GetKey(KeyCode.Space))
-                Jump();
-                
-        }
-        else
-            wallJumpCDTimer -= Time.deltaTime;
+        if (Input.GetKey(KeyCode.Space))
+            Jump();
     }
 
     private void Jump()
     {
-        if (isGrounded()) // regular jump
+        if (isGrounded())
         {
             body.linearVelocity = new Vector2(body.linearVelocity.x, jumpPower);
             anim.SetTrigger("jump");
-        }
-        else if (onWall() && !isGrounded()) // wall jump
-        {
-            if (horizontalInput == 0)
-            {
-                body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 10, 0);
-                transform.localScale = new Vector3(-Mathf.Sign(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-            }
-            else
-                body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 3, 6);
-
-            wallJumpCDTimer = wallJumpCD;
         }
     }
 
@@ -138,26 +104,10 @@ public class PlayerMovement : MonoBehaviour
         return rayCastHit.collider != null;
     }
 
-
-    private bool onWall() // Prob only works if the collider is on the actual climb wall
-    {
-        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, climbWallLayer);
-        if (rayCastHit.collider == null)
-            return false;
-            
-        GameObject climbWall = rayCastHit.transform.gameObject;
-        if (climbWall.transform.rotation.y == 1 && Mathf.Sign(transform.localScale.x) == -1)
-            return false;
-        else if (climbWall.transform.rotation.y == 0 && Mathf.Sign(transform.localScale.x) == 1)
-            return false;
-
-        return true;
-    }
-
     private void handlePush()
     {
-        RaycastHit2D rayCastCeilingHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, 0.1f, pushCeilingLayer);
-        RaycastHit2D rayCastFloorHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, pushCeilingLayer);
+        RaycastHit2D rayCastCeilingHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, 0.1f, pushLayer);
+        RaycastHit2D rayCastFloorHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, pushLayer);
         if (rayCastCeilingHit) {
             ceilingPush();
         } else if (rayCastFloorHit) {
@@ -167,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool canAttack()
     {
-        return !onWall() && !dying && !globalSceneManager.isBlocked;
+        return !dying && !globalSceneManager.isBlocked;
     }
 
     public void dieMovement()
@@ -212,13 +162,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (level.transcend == transcendObject)
             {
-                globalSceneManager.level = level.level;
+                globalSceneManager.setLevel(level.level);
                 loadLevel(level);
                 break;
             }
         }
-
-        Debug.LogWarning("Transcend object not found in any level.");
     }
     
     public void hardSpawn() {
@@ -232,7 +180,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (currentLevelObject != null) {
+        if (this != null && currentLevelObject != null) {
             revivePos = currentLevelObject.hardSpawnRevive;
         } else {
             Debug.LogWarning("Current level not found in level manager.");

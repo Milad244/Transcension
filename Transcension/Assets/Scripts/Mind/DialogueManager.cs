@@ -4,18 +4,18 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class DialogueManager : MonoBehaviour // this entire script is not even close to functional btw.
 {
     [SerializeField] private TextAsset jsonDialogue;
     [SerializeField] private GameObject choicePage; // active when choice given
     [SerializeField] private GameObject noChoicePage; // active when no choice given
-    [SerializeField] private GameObject choice1Page;
-     [SerializeField] private GameObject choice2Page;
     [SerializeField] private TextMeshProUGUI playerNoChoiceDia; // for when no choice given
     [SerializeField] private TextMeshProUGUI playerChoice1Dia; // choice 1
     [SerializeField] private TextMeshProUGUI playerChoice2Dia; // choice 2
     [SerializeField] private TextMeshProUGUI mindDia;
+    [SerializeField] private GameObject tip;
 
     private DialogueContainer dialogueData;
     private Dictionary<int, DialogueNode> dialogueNodes;
@@ -32,23 +32,27 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
         resetDialogue();
         loadDialogue(globalSceneManager.diaLevel);
         displayDialogue(currentDialogueId);
+        loadTip(globalSceneManager.diaLevel);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            // ToDo: make sure you can't continue until dialogue is finished writing
+            playerOptionIndex = 0;
+            selectOption();
+        } else if (Input.GetKeyDown(KeyCode.Alpha2) && choice)
+        {
+            playerOptionIndex = 1;
             selectOption();
         }
+    }
 
-        if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)) && choice){
-            if (playerOptionIndex == 0)
-            {
-                changeUserChoice(1);
-            } else{
-                changeUserChoice(0);
-            }
+    private void loadTip(string key)
+    {
+        if (key == "intro")
+        {
+            tip.SetActive(true);
         }
     }
 
@@ -132,19 +136,6 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
     {
         mindDia.SetText(dialogueWriting);
     }
-
-    public void changeUserChoice(int newPlayerOptionIndex)
-    {
-        playerOptionIndex = newPlayerOptionIndex;
-
-        if (newPlayerOptionIndex == 0){
-            choice1Page.GetComponent<Image>().color = ColorUtility.TryParseHtmlString("#4D82A4", out var color1) ? color1 : Color.blue;
-            choice2Page.GetComponent<Image>().color = ColorUtility.TryParseHtmlString("#898989", out var color2) ? color2 : Color.white;
-        } else{
-            choice1Page.GetComponent<Image>().color = ColorUtility.TryParseHtmlString("#898989", out var color2) ? color2 : Color.white;
-            choice2Page.GetComponent<Image>().color = ColorUtility.TryParseHtmlString("#4D82A4", out var color1) ? color1 : Color.blue;
-        }
-    } 
 
     private void selectOption()
     {

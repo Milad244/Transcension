@@ -29,7 +29,7 @@
         },
         {
           "id": 3,
-          "dialogue": "I am your better judgment. Listen here, and listen close. Stay behind these walls and you shall never suffer",
+          "dialogue": "I am your better judgment. Listen here, and listen close. Stay within these walls and you shall never suffer",
           "options": [
             {
               "text": " ...",
@@ -78,7 +78,7 @@
         },
         {
           "id": 3,
-          "dialogue": "Once you submit to me, grovelling on the ground and begging for your pain to end, we'll see if your shameful humor remains",
+          "dialogue": "Once you are groveling on the ground and begging for your pain to end, we'll see if your shameful humor remains",
           "options": [
             {
               "text": " ...",
@@ -91,17 +91,56 @@
           "dialogue": "Finally something we agree on",
           "options": [
             {
-              "text": "That doesn't make you strong that makes you weak",
+              "text": "Pathetic",
               "nextId": 5
             }
           ]
         },
         {
           "id": 5,
-          "dialogue": "I would rather be weak then as shameful as you",
+          "dialogue": "I would rather be pathetic then as shameful as you",
           "options": [
             {
               "text": " ...",
+              "nextId": -1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "tran2",
+      "dialogueTree": [
+        {
+          "id": 1,
+          "dialogue": "Why do you insist on failing?",
+          "options": [
+            {
+              "text": "What else can I do?",
+              "nextId": 2
+            },
+            {
+              "text": "To succeed",
+              "nextId": 3
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "dialogue": "You can stop. You can live a comfortable life",
+          "options": [
+            {
+              "text": "That isn't living",
+              "nextId": -1
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "dialogue": "Your futility knows no bounds",
+          "options": [
+            {
+              "text": "Neither does your indignation",
               "nextId": -1
             }
           ]

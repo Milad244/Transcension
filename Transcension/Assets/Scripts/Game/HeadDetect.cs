@@ -16,6 +16,7 @@ public class HeadDetect : MonoBehaviour
         if (b)
         {
             particles.Play();
+            particles.Emit(50);
         } else {
             particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
