@@ -22,17 +22,13 @@ public class HeadDetect : MonoBehaviour
         }
     }
 
-    private void activateHead()
+    public void activateHead()
     {
         activateParticles(false);
-        transform.parent.GameObject().GetComponent<Head>().activate(this);
+        getParentHead().activate(this);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.tag == "Player")
-        {
-            activateHead();
-        }
+    public Head getParentHead() {
+        return transform.parent.GameObject().GetComponent<Head>();
     }
 }

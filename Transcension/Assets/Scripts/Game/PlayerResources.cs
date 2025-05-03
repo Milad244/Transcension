@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class PlayerResources : MonoBehaviour
@@ -11,11 +10,13 @@ public class PlayerResources : MonoBehaviour
     private List<GameObject> deactiveMineTriggers;
     private GlobalSceneManager globalSceneManager;
     private UIControl uiControl;
+    private List<Head> activeHeads;
 
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
         deactiveMineTriggers = new List<GameObject>();
+        activeHeads = new List<Head>();
         globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
         uiControl = GameObject.Find("Canvas UI").GetComponent<UIControl>();
     }
@@ -50,10 +51,18 @@ public class PlayerResources : MonoBehaviour
             colGameObj.SetActive(false);
         }
 
+        if (col.CompareTag("HeadDetect")) {
+            HeadDetect headDetect = colGameObj.GetComponent<HeadDetect>();
+            headDetect.activateHead();
+            activeHeads.Add(headDetect.getParentHead());
+        }
+
         if (col.CompareTag("Head"))
         {
-            colGameObj.GetComponent<Head>().startDeactivate();
+            Head head = colGameObj.GetComponent<Head>();
+            head.startDeactivate();
             die();
+            activeHeads.Remove(head);
         }
     }
 
@@ -75,9 +84,22 @@ public class PlayerResources : MonoBehaviour
     {
         playerMovement.reviveMovement();
 
-        foreach (GameObject deactiveMineTrigger in deactiveMineTriggers) {
-            deactiveMineTrigger.SetActive(true);
-        } 
+        if (deactiveMineTriggers != null)
+        {
+            foreach (GameObject deactiveMineTrigger in deactiveMineTriggers) 
+            {
+                deactiveMineTrigger.SetActive(true);
+            }
+            deactiveMineTriggers.Clear();
+        }
+        
+        if (activeHeads != null) {
+            foreach (Head head in activeHeads) 
+            {
+                head.GetComponent<Head>().startDeactivate();
+            }
+            activeHeads.Clear();
+        }
     }
 
     private void setMine(Vector3 tPosition)

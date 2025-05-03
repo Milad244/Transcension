@@ -10,7 +10,6 @@ public class Head : MonoBehaviour
     [SerializeField] private float speed;
     private Coroutine deactivateRoutine;
     private PlayerMovement playerMovement;
-    private bool goBack;
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -45,11 +44,6 @@ public class Head : MonoBehaviour
 
     public void startDeactivate() //called from playerResoursces
     {
-        if (!activated) // If user dies before awake animation finishes
-        {
-            goBack = true;
-        }
-        
         if (deactivateRoutine == null)
         {
             deactivateRoutine = StartCoroutine(deactivate());
@@ -66,14 +60,8 @@ public class Head : MonoBehaviour
 
     public void onActivateFinished()
     {
-        if (!goBack)
-        {
-            activated = true;
-        } else {
-            goBack = false;
-        }
+        activated = true;
     }
-
 
     private void Update()
     {

@@ -12,6 +12,7 @@ TagManager:
   - Mine
   - Tip
   - Head
+  - HeadDetect
   layers:
   - Default
   - TransparentFX
@@ -48,6 +49,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: True Background
+    uniqueID: 3573937315
     locked: 0
   - name: Background
     uniqueID: 3480973681
