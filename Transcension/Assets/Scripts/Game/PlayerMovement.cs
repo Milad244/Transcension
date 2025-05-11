@@ -12,9 +12,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject gameManager;
     private LevelManager levelManager;
     
-    public float speed;
-    public float jumpPower;
-    public float ceilingPushPower;
+    private float speed = 10;
+    private float jumpPower = 20;
+    private float ceilingPushPower = 30;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask pushLayer;
 

@@ -64,6 +64,11 @@ public class PlayerResources : MonoBehaviour
             die();
             activeHeads.Remove(head);
         }
+
+        if (col.CompareTag("Speed"))
+        {
+            
+        }
     }
 
     private void OnTriggerExit2D(Collider2D col)
