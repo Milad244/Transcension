@@ -5,6 +5,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D body;
     private Animator anim;
     private BoxCollider2D boxCollider;
+    private ParticleSystem speedParticles;
 
     [SerializeField] private GameObject cameraHolder;
     private CameraController cameraController;
@@ -30,11 +31,14 @@ public class PlayerMovement : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
+        speedParticles = GetComponent<ParticleSystem>();
 
         cameraController = cameraHolder.GetComponent<CameraController>();
         levelManager = gameManager.GetComponent<LevelManager>();
 
         globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
+
+        setSpeedDefault();
 
         initialLevel = globalSceneManager.level;
 
@@ -126,6 +130,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         dying = true;
         body.linearVelocity = new Vector2(0, 0);
+        setSpeedDefault();
         anim.SetTrigger("die");
     }
 
@@ -134,6 +139,16 @@ public class PlayerMovement : MonoBehaviour
         transform.localPosition = revivePos;
         anim.SetTrigger("returnIdle");
         dying = false;
+    }
+
+    public void setSpeedBoost(float newSpeed) {
+        speed = newSpeed;
+        speedParticles.Play();
+    }
+
+    public void setSpeedDefault() {
+        speed = 10;
+        speedParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
     private float adjustFloorLimit(Transform floor) //So camera doesn't show beneath floor
