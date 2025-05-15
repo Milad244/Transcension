@@ -65,9 +65,9 @@ public class PlayerResources : MonoBehaviour
             activeHeads.Remove(head);
         }
 
-        if (col.CompareTag("Speed"))
+        if (col.CompareTag("Slow"))
         {
-            
+            playerMovement.toggleSpeedSlow(true);
         }
     }
 
@@ -77,6 +77,11 @@ public class PlayerResources : MonoBehaviour
         {
             uiControl.transcendTipActive(false);
             canTranscend = false;
+        }
+
+        if (col.CompareTag("Slow"))
+        {
+            playerMovement.toggleSpeedSlow(false);
         }
     }
 

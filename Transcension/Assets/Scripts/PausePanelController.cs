@@ -43,7 +43,6 @@ public class PausePanelController : MonoBehaviour
 
     public void quitGame()
     {
-        TogglePause();
         Application.Quit();
     }
 }

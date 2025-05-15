@@ -146,6 +146,45 @@
           ]
         }
       ]
+    },
+    {
+      "key": "tran3",
+      "dialogueTree": [
+        {
+          "id": 1,
+          "dialogue": "",
+          "options": [
+            {
+              "text": "I am so close!",
+              "nextId": 2
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "dialogue": "You've come this far just to disappoint",
+          "options": [
+            {
+              "text": "Because this is the point where I will give up right?",
+              "nextId": 3
+            },
+            {
+              "text": "Oh just shut up already",
+              "nextId": 3
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "dialogue": "You'll see",
+          "options": [
+            {
+              "text": " ...",
+              "nextId": -1
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -13,7 +13,7 @@ TagManager:
   - Tip
   - Head
   - HeadDetect
-  - Speed
+  - Slow
   layers:
   - Default
   - TransparentFX

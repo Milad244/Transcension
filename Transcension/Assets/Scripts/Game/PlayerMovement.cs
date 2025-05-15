@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private GlobalSceneManager globalSceneManager;
     [SerializeField] private UIControl uiControl;
     private int initialLevel;
+    private bool isSlow = false;
 
     private void Awake()
     {
@@ -141,14 +142,28 @@ public class PlayerMovement : MonoBehaviour
         dying = false;
     }
 
+    public void toggleSpeedSlow(bool slow) {
+        speedParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        isSlow = slow;
+        if (slow) {
+            speed = 1.5f;
+        } else {
+            speed = 10;
+        }
+    }
+
+    // only used for speed boost
     public void setSpeedBoost(float newSpeed) {
         speed = newSpeed;
         speedParticles.Play();
     }
 
+    // only used for speed boost
     public void setSpeedDefault() {
-        speed = 10;
         speedParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        if (!isSlow) {
+            speed = 10;
+        }
     }
 
     private float adjustFloorLimit(Transform floor) //So camera doesn't show beneath floor
