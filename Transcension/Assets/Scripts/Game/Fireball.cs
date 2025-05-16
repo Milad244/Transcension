@@ -2,13 +2,12 @@ using UnityEngine;
 
 public class Fireball : MonoBehaviour
 {
-    [SerializeField] private float speed;
     private BoxCollider2D boxCollider;
     private Animator anim;
-    private float direction;
+    private Vector3 velocity;
     private bool hit;
     private float lifetime;
-    private float charge;
+    private float maxLife = 10f;
    
 
     private void Awake()
@@ -22,17 +21,16 @@ public class Fireball : MonoBehaviour
         if (hit) return;
 
         // fireball flying
-        float movementSpeed = speed * Time.deltaTime * direction;
-        transform.Translate(movementSpeed, 0, 0);
+        transform.Translate(Vector3.right * velocity.magnitude * Time.deltaTime);
 
-        // ending fireball after 3 sec
+        // ending fireball after X seconds
         lifetime += Time.deltaTime;
-        if (lifetime > 3)gameObject.SetActive(false);
+        if (lifetime > maxLife)gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player" || collision.tag == "Fireball" || collision.tag == "Tip")
+        if (collision.tag == "Fireball")
             return;
 
         hit = true;
@@ -40,27 +38,17 @@ public class Fireball : MonoBehaviour
         anim.SetTrigger("explode");
     }
 
-    public void setFireball(float direction, float charge)
+    public void setFireball(Vector3 velocity)
     {
         lifetime = 0;
         gameObject.SetActive(true);
         hit = false;
         boxCollider.enabled = true;
 
-        this.direction = direction;
+        this.velocity = velocity;
 
-        if (charge > 1)
-            this.charge = 1;
-        else if (charge < 0.5f)
-            this.charge = 0.5f;
-        else
-            this.charge = charge;
-
-        float absCharge = this.charge;
-        if (Mathf.Sign(this.charge) != direction)
-            this.charge = -this.charge;
-
-        transform.localScale = new Vector3(this.charge, absCharge, absCharge);
+        float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
     private void deactivate() // Called after explode anim is finished

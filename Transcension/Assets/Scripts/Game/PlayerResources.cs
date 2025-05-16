@@ -42,7 +42,7 @@ public class PlayerResources : MonoBehaviour
             uiControl.transcendTipActive(true);
             canTranscend = true;
             transcendLevel = colGameObj;
-        } 
+        }
 
         if (col.CompareTag("MTrigger"))
         {
@@ -51,7 +51,8 @@ public class PlayerResources : MonoBehaviour
             colGameObj.SetActive(false);
         }
 
-        if (col.CompareTag("HeadDetect")) {
+        if (col.CompareTag("HeadDetect"))
+        {
             HeadDetect headDetect = colGameObj.GetComponent<HeadDetect>();
             headDetect.activateHead();
             activeHeads.Add(headDetect.getParentHead());
@@ -68,6 +69,12 @@ public class PlayerResources : MonoBehaviour
         if (col.CompareTag("Slow"))
         {
             playerMovement.toggleSpeedSlow(true);
+        }
+
+        if (col.CompareTag("Fireball"))
+        {
+            die();
+            StartCoroutine(playerMovement.startBoss());
         }
     }
 

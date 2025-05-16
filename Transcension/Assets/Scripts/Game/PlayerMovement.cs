@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -12,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private GameObject gameManager;
     private LevelManager levelManager;
-    
+
     private float speed = 10;
     private float jumpPower = 20;
     private float ceilingPushPower = 30;
@@ -24,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 revivePos;
     private GlobalSceneManager globalSceneManager;
     [SerializeField] private UIControl uiControl;
-    private int initialLevel;
+    private int currentLevel;
     private bool isSlow = false;
 
     private void Awake()
@@ -41,10 +42,10 @@ public class PlayerMovement : MonoBehaviour
 
         setSpeedDefault();
 
-        initialLevel = globalSceneManager.level;
+        currentLevel = globalSceneManager.level;
 
         // Dealing with initial spawn
-        loadLevel(levelManager.levels[initialLevel]);
+        loadLevel(levelManager.levels[currentLevel]);
     }
 
     private void Update()
@@ -52,15 +53,17 @@ public class PlayerMovement : MonoBehaviour
         if (globalSceneManager.isBlocked)
         {
             return;
-        } else if (dying)
+        }
+        else if (dying)
         {
             // Code to check dying anim and if not happening then start it
-            if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Die") {
+            if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Die")
+            {
                 anim.SetTrigger("die");
             }
             return;
         }
-            
+
         // horizontal movement  
         horizontalInput = Input.GetAxis("Horizontal");
 
@@ -113,16 +116,14 @@ public class PlayerMovement : MonoBehaviour
     {
         RaycastHit2D rayCastCeilingHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, 0.1f, pushLayer);
         RaycastHit2D rayCastFloorHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, pushLayer);
-        if (rayCastCeilingHit) {
+        if (rayCastCeilingHit)
+        {
             ceilingPush();
-        } else if (rayCastFloorHit) {
+        }
+        else if (rayCastFloorHit)
+        {
             floorPush();
         }
-    }
-
-    public bool canAttack()
-    {
-        return !dying && !globalSceneManager.isBlocked;
     }
 
     public void dieMovement()
@@ -142,26 +143,33 @@ public class PlayerMovement : MonoBehaviour
         dying = false;
     }
 
-    public void toggleSpeedSlow(bool slow) {
+    public void toggleSpeedSlow(bool slow)
+    {
         speedParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         isSlow = slow;
-        if (slow) {
+        if (slow)
+        {
             speed = 1.5f;
-        } else {
+        }
+        else
+        {
             speed = 10;
         }
     }
 
     // only used for speed boost
-    public void setSpeedBoost(float newSpeed) {
+    public void setSpeedBoost(float newSpeed)
+    {
         speed = newSpeed;
         speedParticles.Play();
     }
 
     // only used for speed boost
-    public void setSpeedDefault() {
+    public void setSpeedDefault()
+    {
         speedParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        if (!isSlow) {
+        if (!isSlow)
+        {
             speed = 10;
         }
     }
@@ -184,11 +192,16 @@ public class PlayerMovement : MonoBehaviour
         cameraController.changeFloorLimit(adjustFloorLimit(level.ground));
         cameraController.changeWallLimit(level.wallMinLimitX, level.wallMaxLimitX);
 
-        if (!level.mindLevel.Equals("") && initialLevel != level.level){
+        if (!level.mindLevel.Equals("") && currentLevel != level.level)
+        {
             uiControl.mindTransition();
             globalSceneManager.loadMindScene(level.mindLevel);
         }
-        return;
+
+        if (currentLevel == 5)
+        {
+            StartCoroutine(startBoss());
+        }
     }
 
     public void transcend(GameObject transcendObject)
@@ -203,22 +216,34 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-    
-    public void hardSpawn() {
+
+    public void hardSpawn()
+    {
         int currentLevel = globalSceneManager.level;
         Level currentLevelObject = null;
 
-        foreach (Level level in levelManager.levels) {
-            if (level.level == currentLevel) {
+        foreach (Level level in levelManager.levels)
+        {
+            if (level.level == currentLevel)
+            {
                 currentLevelObject = level;
                 break;
             }
         }
 
-        if (this != null && currentLevelObject != null) {
+        if (this != null && currentLevelObject != null)
+        {
             revivePos = currentLevelObject.hardSpawnRevive;
-        } else {
+        }
+        else
+        {
             Debug.LogWarning("Current level not found in level manager.");
         }
+    }
+
+    public IEnumerator startBoss()
+    {
+        yield return new WaitWhile(() => dying == true); //waiting if player is dead
+        GameObject.Find("Boss").GetComponent<Boss>().startBossFight();
     }
 }

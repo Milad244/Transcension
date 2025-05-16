@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class UIControl : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI attackCharge;
     [SerializeField] private GameObject transitionPanel;
     [SerializeField] private TextMeshProUGUI transitionText;
     [SerializeField] private TextMeshProUGUI tipText;
@@ -25,11 +24,6 @@ public class UIControl : MonoBehaviour
 
     public HashSet<string> finishedTips = new HashSet<string>();
     private string currentTip;
-
-    public void updateCharge(float charge)
-    {
-        attackCharge.SetText(charge.ToString("0.00"));
-    }
 
     public void mindTransition()
     {   

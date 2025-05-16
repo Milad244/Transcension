@@ -185,6 +185,92 @@
           ]
         }
       ]
+    }, {
+      "key": "tran4",
+      "dialogueTree": [
+        {
+          "id": 1,
+          "dialogue": "I hate you",
+          "options": [
+            {
+              "text": "Why?",
+              "nextId": 2
+            },
+            {
+              "text": "Just admit I'm right",
+              "nextId": 5
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "dialogue": "Does an ant shoot for the stars?",
+          "options": [
+            {
+              "text": "If it does?",
+              "nextId": 3
+            },
+            {
+              "text": "Forget I asked",
+              "nextId": 4
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "dialogue": "Its essence is unnatural, just as yours is. It is now time for me to eradicate you",
+          "options": [
+            {
+              "text": "...",
+              "nextId": -1
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "dialogue": "Gladly. I will forget you entirely, just as I rid you from this world",
+          "options": [
+            {
+              "text": "...",
+              "nextId": -1
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "dialogue": "You truly are arrogant scum. Do you really believe this is a battle you can win?",
+          "options": [
+            {
+              "text": "It is my will to win",
+              "nextId": 6
+            },
+            {
+              "text": "I've already won",
+              "nextId": 7
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "dialogue": "Then I guess I'll just have to prove your existence is a mistake myself",
+          "options": [
+            {
+              "text": "...",
+              "nextId": -1
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "dialogue": "I can't hear another word out from your mouth. I will just have to destroy you myself, once and for all",
+          "options": [
+            {
+              "text": "...",
+              "nextId": -1
+            }
+          ]
+        }
+      ]
     }
   ]
 }
