@@ -166,6 +166,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void tellTo(Transform position)
+    {
+        transform.localPosition = position.position;
+    }
+
     private float adjustFloorLimit(Transform floor) //So camera doesn't show beneath floor
     {
         return 2 + floor.position.y + 1; // Y-Size of ground + y position of ground + playerheight DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
