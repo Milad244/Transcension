@@ -271,6 +271,69 @@
           ]
         }
       ]
+    }, 
+    {
+      "key": "tran5",
+      "dialogueTree": [
+        {
+          "id": 1,
+          "dialogue": "",
+          "options": [
+            {
+              "text": "Are you there?",
+              "nextId": 2
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "dialogue": "...",
+          "options": [
+            {
+              "text": "Don't be like that",
+              "nextId": 3
+            },
+            {
+              "text": "It'll get lonely without you",
+              "nextId": 3
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "dialogue": "My shame is all that remains",
+          "options": [
+            {
+              "text": "You can still exist with your failure",
+              "nextId": 4
+            },
+            {
+              "text": "Did you think I never failed along the way?",
+              "nextId": 5
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "dialogue": "I am not so insolent as you",
+          "options": [
+            {
+              "text": "You are certainly as stubborn though",
+              "nextId": -1
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "dialogue": "Save the speech and just let me disintegrate",
+          "options": [
+            {
+              "text": "That won't change anything",
+              "nextId": -1
+            }
+          ]
+        }
+      ]
     }
   ]
 }

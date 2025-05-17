@@ -12,12 +12,17 @@ public class Boss : MonoBehaviour
     private int firePointCount = 20;
     private Vector3[] firePoints;
     [SerializeField] private GameObject fireballHolder;
-    private int fireballCount = 100;
+    private int fireballCount = 150;
     [SerializeField] private GameObject fireballPrefab;
     private GameObject[] fireballs;
     private Coroutine attackSetCoroutine;
+    private int stage = 1;
+    private float currentHealth = 500f;
+    private float healthDropPerSet = 100f;
+    private GlobalSceneManager globalSceneManager;
     void Awake()
     {
+        globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
         buildFirePoints();
         buildFireballs();
     }
@@ -27,14 +32,14 @@ public class Boss : MonoBehaviour
         worldFirePointLeftLim = firePointLeftLim.position;
         worldFirePointRightLim = firePointRightLim.position;
 
-        firePoints = new Vector3[firePointCount]; 
+        firePoints = new Vector3[firePointCount+1]; 
         float firePointRange = worldFirePointRightLim.x - worldFirePointLeftLim.x;
         float intervalLength = firePointRange / firePointCount;
-        for (int i = 0; i < firePointCount; i++)
+        for (int i = 0; i <= firePointCount; i++)
         {
             float x = worldFirePointLeftLim.x + intervalLength * i;
             firePoints[i] = new Vector3(x, worldFirePointLeftLim.y, worldFirePointLeftLim.z);
-            //Debug.DrawRay(firePoints[i], Vector3.up * 2f, Color.red, 15f);
+            Debug.DrawRay(firePoints[i], Vector3.up * 2f, Color.red, 15f);
         }
     }
 
@@ -69,16 +74,59 @@ public class Boss : MonoBehaviour
     public void startBossFight() //called from player movement
     {
         stopFireballs();
-        startAttackCoroutine(attackSet1());
+        switch (stage)
+        {
+            case 1:
+                startAttackCoroutine(attackSet1());
+                break;
+            case 2:
+                startAttackCoroutine(attackSet2());
+                break;
+            case 3:
+                startAttackCoroutine(attackSet3());
+                break;
+            case 4:
+                startAttackCoroutine(attackSet4());
+                break;
+            case 5:
+                startAttackCoroutine(attackSet5());
+                break;
+            default:
+                Debug.LogWarning("Boss stage not found");
+                break;
+        }
     }
+    
+    private bool anyFireballActive()
+    {
+        foreach (GameObject fireball in fireballs)
+        {
+            if (fireball.activeInHierarchy)
+                return true;
+        }
+        return false;
+    }
+
+    public IEnumerator waitForAllFireballsInactive()
+    {
+        while (anyFireballActive())
+        {
+            yield return null;
+        }
+    }
+
 
     private IEnumerator attackSet1()
     {
+        StartCoroutine(uiControl.updateHealthBar(currentHealth, currentHealth));
+        yield return new WaitForSeconds(3);
+
         float setTime = 20f;
         float elapsed = 0f;
 
         float interval = 0.1f;
         int count = 0;
+
         while (elapsed < setTime)
         {
             if (elapsed >= count * interval)
@@ -92,10 +140,22 @@ public class Boss : MonoBehaviour
             yield return null;
             elapsed += Time.deltaTime;
         }
+
+        yield return StartCoroutine(waitForAllFireballsInactive());
+
+        if (GameObject.Find("Player").GetComponent<PlayerMovement>().dying)
+            yield break;
+
+        StartCoroutine(uiControl.updateHealthBar(currentHealth, currentHealth - healthDropPerSet));
+        yield return new WaitForSeconds(3);
+
         startAttackCoroutine(attackSet2());
+
+        currentHealth -= healthDropPerSet;
+        stage = 2;
     }
 
-    private IEnumerator attackSet2()
+    private IEnumerator attackSet2() // 3 set fireballs
     {
         float setTime = 20f;
         float elapsed = 0f;
@@ -117,7 +177,144 @@ public class Boss : MonoBehaviour
             yield return null;
             elapsed += Time.deltaTime;
         }
-        Debug.Log("YOU WON!");
+
+        yield return StartCoroutine(waitForAllFireballsInactive());
+
+        if (GameObject.Find("Player").GetComponent<PlayerMovement>().dying)
+            yield break;
+
+        StartCoroutine(uiControl.updateHealthBar(currentHealth, currentHealth - healthDropPerSet));
+        yield return new WaitForSeconds(3);
+
+        startAttackCoroutine(attackSet3());
+        
+        currentHealth -= healthDropPerSet;
+        stage = 3;
+    }
+
+    private IEnumerator attackSet3() // diagonal fireballs
+    {
+        float setTime = 20f;
+        float elapsed = 0f;
+
+        float interval = 0.15f;
+        int count = 0;
+        while (elapsed < setTime)
+        {
+            if (elapsed >= count * interval)
+            {
+                int firePointI = UnityEngine.Random.Range(0, firePoints.Length);
+                float xPos = firePoints[firePointI].x;
+                float diffLeft = Math.Abs(worldFirePointLeftLim.x - xPos);
+                float diffRight = Math.Abs(worldFirePointRightLim.x - xPos);
+
+                int x = UnityEngine.Random.Range(0, 15);
+                if (diffLeft > diffRight)
+                {
+                    x = -x;
+                }
+                Vector3 velocity = new Vector3(x, -9, 0);
+                attack(firePointI, velocity);
+                count++;
+            }
+
+            yield return null;
+            elapsed += Time.deltaTime;
+        }
+
+        yield return StartCoroutine(waitForAllFireballsInactive());
+
+        if (GameObject.Find("Player").GetComponent<PlayerMovement>().dying)
+            yield break;
+
+        StartCoroutine(uiControl.updateHealthBar(currentHealth, currentHealth - healthDropPerSet));
+        yield return new WaitForSeconds(3);
+
+        startAttackCoroutine(attackSet4());
+        
+        currentHealth -= healthDropPerSet;
+        stage = 4;
+    }
+
+    private IEnumerator attackSet4() // slow falling fireballs
+    {
+        float setTime = 20f;
+        float elapsed = 0f;
+
+        float interval = 0.1f;
+        int count = 0;
+
+        while (elapsed < setTime)
+        {
+            if (elapsed >= count * interval)
+            {
+                int firePointI = UnityEngine.Random.Range(0, firePoints.Length);
+                Vector3 velocity = new Vector3(0, -2, 0);
+                attack(firePointI, velocity);
+                count++;
+            }
+
+            yield return null;
+            elapsed += Time.deltaTime;
+        }
+
+        yield return StartCoroutine(waitForAllFireballsInactive());
+
+        if (GameObject.Find("Player").GetComponent<PlayerMovement>().dying)
+            yield break;
+
+        StartCoroutine(uiControl.updateHealthBar(currentHealth, currentHealth - healthDropPerSet));
+        yield return new WaitForSeconds(3);
+
+        startAttackCoroutine(attackSet5());
+        
+        currentHealth -= healthDropPerSet;
+        stage = 5;
+    }
+
+    private IEnumerator attackSet5() //making it into continous fireballs
+    {
+        float setTime = 20f;
+        float elapsed = 0f;
+
+        float interval = 0.3f;
+        int count = 0;
+
+        while (elapsed < setTime)
+        {
+            if (elapsed >= count * interval)
+            {
+                int firePointI = count % firePoints.Length;
+                int firePointI2 = 20 - firePointI;
+                int firePointI3 = (firePointI + firePointI2) / 2;
+                Vector3 velocity = new Vector3(0, -25, 0);
+                attack(firePointI, velocity);
+                attack(firePointI2, velocity);
+                attack(firePointI3, velocity);
+                count++;
+            }
+
+            yield return null;
+            elapsed += Time.deltaTime;
+        }
+
+        yield return StartCoroutine(waitForAllFireballsInactive());
+
+        if (GameObject.Find("Player").GetComponent<PlayerMovement>().dying)
+            yield break;
+            
+        StartCoroutine(uiControl.updateHealthBar(currentHealth, currentHealth - healthDropPerSet));
+        yield return new WaitForSeconds(3);
+
+        currentHealth -= healthDropPerSet;
+        winBoss();
+    }
+
+    private void winBoss()
+    {
+        Debug.Log("YOU WON");
+        uiControl.mindTransition();
+        globalSceneManager.loadMindScene("tran5");
     }
     
     private void attack(int firePointI, Vector3 velocity)
