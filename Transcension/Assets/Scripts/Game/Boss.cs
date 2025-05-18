@@ -277,7 +277,7 @@ public class Boss : MonoBehaviour
         float setTime = 20f;
         float elapsed = 0f;
 
-        float interval = 0.3f;
+        float interval = 0.4f;
         int count = 0;
 
         while (elapsed < setTime)
@@ -312,7 +312,6 @@ public class Boss : MonoBehaviour
 
     private void winBoss()
     {
-        Debug.Log("YOU WON");
         uiControl.mindTransition();
         globalSceneManager.loadMindScene("tran5");
     }

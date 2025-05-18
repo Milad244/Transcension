@@ -8,6 +8,7 @@ public class GlobalSceneManager : MonoBehaviour
 
     public bool isBlocked = false; // For any blocking of actions
     public int level = 0;
+    public int deathCount = 0;
     private float resumeDelay = 0.1f;
     public string diaLevel { get; private set; }
     public enum SceneName
@@ -17,20 +18,48 @@ public class GlobalSceneManager : MonoBehaviour
         Mind = 2
     }
     public string levelPref { get; private set; } = "LevelPref";
+    public string deathCountPref { get; private set; } = "DeathCountPref";
 
     public void setLevel(int level_)
     {
         level = level_;
         PlayerPrefs.SetInt(levelPref, level);
+        PlayerPrefs.Save();
+    }
+    private void setDeathCount(int deathCount_)
+    {
+        deathCount = deathCount_;
+        PlayerPrefs.SetInt(deathCountPref, deathCount);
+        PlayerPrefs.Save();
+    }
+    public void addToDeathCount()
+    {
+        deathCount++;
+        PlayerPrefs.SetInt(deathCountPref, deathCount);
+        PlayerPrefs.Save();
     }
 
     private void getLevelForAwake()
-    {   
+    {
         if (PlayerPrefs.HasKey(levelPref))
         {
             level = PlayerPrefs.GetInt(levelPref);
-        } else {
+        }
+        else
+        {
             setLevel(0);
+        }
+    }
+
+    private void getDeathForAwake()
+    {
+        if (PlayerPrefs.HasKey(deathCountPref))
+        {
+            deathCount = PlayerPrefs.GetInt(deathCountPref);
+        }
+        else
+        {
+            setDeathCount(0);
         }
     }
 
@@ -41,6 +70,7 @@ public class GlobalSceneManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             getLevelForAwake();
+            getDeathForAwake();
         }
         else
         {
@@ -48,9 +78,16 @@ public class GlobalSceneManager : MonoBehaviour
         }
     }
 
+    public void finishSave()
+    {
+        setLevel(0);
+        setDeathCount(0);
+    }
+
     public void startNewGame()
     {
         setLevel(0);
+        setDeathCount(0);
         SceneManager.LoadScene((int)SceneName.Game);
     }
 
@@ -82,8 +119,8 @@ public class GlobalSceneManager : MonoBehaviour
         StartCoroutine(resumeWithDelay());
     }
 
-    // Coroutine to delay resumption of inputs
-    private IEnumerator resumeWithDelay()
+  // Coroutine to delay resumption of inputs
+  private IEnumerator resumeWithDelay()
     {
         yield return new WaitForSeconds(resumeDelay);
         isBlocked = false; // Allow input after the delay

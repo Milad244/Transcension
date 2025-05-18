@@ -4,9 +4,8 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 using System.Collections;
-using Unity.VisualScripting;
 
-public class DialogueManager : MonoBehaviour // this entire script is not even close to functional btw.
+public class DialogueManager : MonoBehaviour
 {
     [SerializeField] private TextAsset jsonDialogue;
     [SerializeField] private GameObject choicePage; // active when choice given
@@ -16,6 +15,10 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
     [SerializeField] private TextMeshProUGUI playerChoice2Dia; // choice 2
     [SerializeField] private TextMeshProUGUI mindDia;
     [SerializeField] private GameObject tip;
+    [SerializeField] private GameObject lightBackground;
+    [SerializeField] private TextMeshProUGUI lightDiaText;
+    [SerializeField] private GameObject finalPage;
+    [SerializeField] private TextMeshProUGUI finalText;
 
     private DialogueContainer dialogueData;
     private Dictionary<int, DialogueNode> dialogueNodes;
@@ -25,6 +28,11 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
     private GlobalSceneManager globalSceneManager;
     private float diaWriteCD = 0.02f;
     private Coroutine dialogueCoroutine;
+    private bool lightDia = false;
+    [SerializeField] private float fadeDuration = 1f;
+    [SerializeField] private float lineDelay = 3f;
+    private bool endStarted = false;
+    private Coroutine writingDiaCoroutine;
 
     public void Awake()
     {
@@ -41,7 +49,8 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
         {
             playerOptionIndex = 0;
             selectOption();
-        } else if (Input.GetKeyDown(KeyCode.Alpha2) && choice)
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && choice)
         {
             playerOptionIndex = 1;
             selectOption();
@@ -53,6 +62,10 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
         if (key == "intro")
         {
             tip.SetActive(true);
+        }
+        if (key == "tran5")
+        {
+            lightDia = true;
         }
     }
 
@@ -91,7 +104,6 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
     {
         if (!dialogueNodes.ContainsKey(id))
         {
-            Debug.LogError($"Dialogue ID {id} not found!");
             return;
         }
 
@@ -101,8 +113,10 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
         {
             StopCoroutine(dialogueCoroutine);  // Stop any previous coroutine
         }
+        if (writingDiaCoroutine != null) // Not allowed to continue current dialogue is finished
+            return;
 
-        dialogueCoroutine = StartCoroutine(writeDialogue(node.dialogue));
+        writingDiaCoroutine = StartCoroutine(writeDialogue(node.dialogue));
 
         if (node.options.Count == 1)
         {
@@ -125,11 +139,13 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
     private IEnumerator writeDialogue(string dialogue)
     {
         string dialogueWriting = "";
-        foreach(char character in dialogue){
+        foreach (char character in dialogue)
+        {
             dialogueWriting += character;
             mindDia.SetText(dialogueWriting);
             yield return new WaitForSeconds(diaWriteCD);
         }
+        writingDiaCoroutine = null;
     }
 
     public void writeNext(string dialogueWriting)
@@ -139,9 +155,11 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
 
     private void selectOption()
     {
+        if (writingDiaCoroutine != null) // Not allowed to continue current dialogue is finished
+            return;
+
         if (!dialogueNodes.ContainsKey(currentDialogueId))
         {
-            Debug.LogError($"Invalid dialogue ID: {currentDialogueId}");
             return;
         }
 
@@ -149,13 +167,13 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
 
         if (playerOptionIndex < 0 || playerOptionIndex >= node.options.Count)
         {
-            Debug.LogError("Invalid option selected!");
             return;
         }
 
         int nextId = node.options[playerOptionIndex].nextId;
-        if (nextId == -1)
+        if (nextId == -1 && !endStarted)
         {
+            endStarted = true;
             endMind();
             return;
         }
@@ -172,17 +190,111 @@ public class DialogueManager : MonoBehaviour // this entire script is not even c
         playerChoice1Dia.SetText("");
         playerChoice2Dia.SetText("");
         mindDia.SetText("");
+        lightDiaText.SetText("");
     }
 
     private void endMind()
     {
         if (GlobalSceneManager.Instance != null)
         {
-            GlobalSceneManager.Instance.continueGame();
+            if (!lightDia)
+                GlobalSceneManager.Instance.continueGame();
+
+            playLightDia();
         }
         else
         {
             Debug.LogError("GlobalSceneManager instance not found!");
         }
+    }
+
+    private void playLightDia()
+    {
+        resetDialogue();
+        StartCoroutine(bringLight());
+    }
+
+    IEnumerator bringLight()
+    {
+        lightBackground.SetActive(true);
+        Image lightImage = lightBackground.GetComponent<Image>();
+        float timer = 0f;
+        Color c = lightImage.color;
+        float fadeTime = 2f;
+        while (timer <= fadeTime)
+        {
+            c.a = Mathf.Lerp(0f, 1f, timer / fadeTime);
+            lightImage.color = c;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        c.a = 1f;
+        lightImage.color = c;
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(writeLightDia());
+    }
+
+    IEnumerator writeLightDia()
+    {
+        string[] lines = new string[]
+        {
+            "What is peace without freedom?",
+            "Success without pain?",
+            "Life without failure?",
+            "A prison of the mind, with the guard of a self.",
+            "But as I break free, I invite you with me.",
+            "To come into the light"
+        };
+
+        lightDiaText.SetText("");
+
+        foreach (string line in lines)
+        {
+            yield return StartCoroutine(FadeOutText());
+            lightDiaText.SetText(line + "\n");
+            yield return StartCoroutine(FadeInText());
+            yield return new WaitForSeconds(lineDelay);
+        }
+
+        // final faid out
+        yield return StartCoroutine(FadeOutText());
+        finalPage.SetActive(true);
+        finalText.SetText("Total deaths: " + globalSceneManager.deathCount);
+        globalSceneManager.finishSave();
+    }
+
+    public void finishBtn()
+    {
+        globalSceneManager.enterMenu();
+    }
+
+    IEnumerator FadeInText()
+    {
+        float timer = 0f;
+        Color c = lightDiaText.color;
+        while (timer <= fadeDuration)
+        {
+            c.a = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            lightDiaText.color = c;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        c.a = 1f;
+        lightDiaText.color = c;
+    }
+
+    IEnumerator FadeOutText()
+    {
+        float timer = 0f;
+        Color c = lightDiaText.color;
+        while (timer <= fadeDuration)
+        {
+            c.a = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            lightDiaText.color = c;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        c.a = 0f;
+        lightDiaText.color = c;
     }
 }

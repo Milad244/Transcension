@@ -131,6 +131,7 @@ public class PlayerMovement : MonoBehaviour
         if (dying)
             return;
         dying = true;
+        globalSceneManager.addToDeathCount();
         body.linearVelocity = new Vector2(0, 0);
         setSpeedDefault();
         anim.SetTrigger("die");
