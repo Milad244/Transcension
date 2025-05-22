@@ -26,7 +26,7 @@ public class PlayerResources : MonoBehaviour
         if (globalSceneManager.isBlocked)
             return;
 
-        if (canTranscend && Input.GetKeyDown(KeyCode.F))
+        if (canTranscend && Input.GetKeyDown(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Tran]))
         {
             playerMovement.transcend(transcendLevel);
         }

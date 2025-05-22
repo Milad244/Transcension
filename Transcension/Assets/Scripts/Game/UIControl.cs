@@ -12,6 +12,7 @@ public class UIControl : MonoBehaviour
     [SerializeField] private TextMeshProUGUI tipText;
     [SerializeField] private Image bossHealthFill;
     [SerializeField] private GameObject bossUI;
+    private GlobalSceneManager globalSceneManager;
 
     public enum TipType
     {
@@ -19,17 +20,23 @@ public class UIControl : MonoBehaviour
         Jumping,
         Transcending
     }
-    private Dictionary<TipType, string> tips = new Dictionary<TipType, string>
-    {
-        { TipType.Movement, "Press 'A' and 'D' to move!" },
-        { TipType.Jumping, "Press 'Space' to jump!" },
-        { TipType.Transcending, "Press 'F' to Transcend" },
-    };
+    private Dictionary<TipType, string> tips;
 
     public HashSet<string> finishedTips = new HashSet<string>();
     private string currentTip;
 
-    public void mindTransition()
+    private void Awake()
+    {
+        globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
+        tips = new Dictionary<TipType, string>
+        {
+            { TipType.Movement, "Press 'A' and 'D' to move!" },
+            { TipType.Jumping, "Press '" + globalSceneManager.cleanKeyCode(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Jump]) + "' to jump!"},
+            { TipType.Transcending, "Press '"+ globalSceneManager.cleanKeyCode(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Tran]) + "' to Transcend" },
+        };
+    }
+
+  public void mindTransition()
     {
         transitionPanel.SetActive(true);
         transitionText.SetText("");

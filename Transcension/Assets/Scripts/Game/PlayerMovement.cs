@@ -51,10 +51,9 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         if (globalSceneManager.isBlocked)
-        {
             return;
-        }
-        else if (dying)
+
+        if (dying)
         {
             // Code to check dying anim and if not happening then start it
             if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Die")
@@ -64,25 +63,25 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        // horizontal movement  
+        // Horizontal movement  
         horizontalInput = Input.GetAxis("Horizontal");
 
-        // flipping character
+        // Flipping character
         if (horizontalInput > 0.01f)
             transform.localScale = Vector3.one;
         else if (horizontalInput < -0.01f)
             transform.localScale = new Vector3(-1, 1, 1);
 
-        // animation params
+        // Animation params
         anim.SetBool("run", horizontalInput != 0);
         anim.SetBool("grounded", isGrounded());
 
-        // applying movement
+        // Applying movement
         body.linearVelocity = new Vector2(horizontalInput * speed, body.linearVelocity.y);
 
         handlePush();
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Jump]))
             Jump();
     }
 

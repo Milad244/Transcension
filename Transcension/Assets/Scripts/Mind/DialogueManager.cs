@@ -45,12 +45,12 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Choice1]))
         {
             playerOptionIndex = 0;
             selectOption();
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && choice)
+        else if (Input.GetKeyDown(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Choice2]) && choice)
         {
             playerOptionIndex = 1;
             selectOption();

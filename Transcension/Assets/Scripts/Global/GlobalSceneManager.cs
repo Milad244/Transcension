@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,6 +22,56 @@ public class GlobalSceneManager : MonoBehaviour
     }
     public string levelPref { get; private set; } = "LevelPref";
     public string deathCountPref { get; private set; } = "DeathCountPref";
+
+    public enum Binds
+    {
+        Jump, Tran, Choice1, Choice2
+    }
+    public Dictionary<Binds, string> bindPrefs = new Dictionary<Binds, string>
+    {
+        {Binds.Jump, "JumpPref"},
+        {Binds.Tran, "TranPref"},
+        {Binds.Choice1, "Choice1Pref"},
+        {Binds.Choice2, "Choice2Pref"}
+    };
+    public Dictionary<Binds, KeyCode> keyBinds = new Dictionary<Binds, KeyCode>{};
+    public Dictionary<Binds, KeyCode> defaultKeyBinds = new Dictionary<Binds, KeyCode>
+    {
+        {Binds.Jump, KeyCode.Space},
+        {Binds.Tran, KeyCode.F},
+        {Binds.Choice1, KeyCode.Alpha1},
+        {Binds.Choice2, KeyCode.Alpha2}
+    };
+
+    public void getBinds()
+    {
+        foreach (KeyValuePair<Binds, string> entry in bindPrefs)
+        {
+            if (PlayerPrefs.HasKey(entry.Value))
+            {
+                string keyString = PlayerPrefs.GetString(entry.Value);
+                KeyCode keyCode = (KeyCode)Enum.Parse(typeof(KeyCode), keyString);
+                keyBinds[entry.Key] = keyCode;
+            }
+            else
+            {
+                setBind(entry.Key, defaultKeyBinds[entry.Key]);
+            }
+        }
+    }
+
+    public void setBind(Binds bind, KeyCode newKey)
+    {
+        keyBinds[bind] = newKey;
+        PlayerPrefs.SetString(bindPrefs[bind], newKey.ToString());
+        PlayerPrefs.Save();
+    }
+
+    public string cleanKeyCode(KeyCode keyCode)
+    {
+        string keyString = keyCode.ToString();
+        return Regex.Replace(keyString, @"Alpha(\d)", "$1");
+    }
 
     public void setLevel(int level_)
     {
@@ -71,6 +124,7 @@ public class GlobalSceneManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             getLevelForAwake();
             getDeathForAwake();
+            getBinds();
         }
         else
         {
