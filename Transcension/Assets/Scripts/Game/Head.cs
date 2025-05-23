@@ -19,18 +19,22 @@ public class Head : MonoBehaviour
 
     private IEnumerator deactivate()
     {
+        Debug.Log("1");
         activated = false;
         yield return new WaitForSeconds(0.5f);// delay after killing you 
-        while (Vector3.Distance(transform.position, oriPos) > 0.1f)
+        while (Vector3.Distance(transform.position, oriPos) > 1f)
         {
             Vector3 direction = oriPos - transform.position;
             direction.Normalize();
             Vector3 v = direction * speed * Time.deltaTime;
             transform.position += v;
 
+            Debug.Log(Vector3.Distance(transform.position, oriPos));
             yield return null;
         }
-        
+        transform.position = oriPos;
+
+        Debug.Log("3");
         anim.SetTrigger("deactivate");
         if (headDetect)
         {
@@ -39,6 +43,7 @@ public class Head : MonoBehaviour
             Debug.LogError("HeadDetect script not found");
         }
 
+        activated = false;
         deactivateRoutine = null;
     }
 
@@ -68,10 +73,11 @@ public class Head : MonoBehaviour
         if (activated)
         {
             Vector3 playPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-            Vector3 direction = playPos - transform.position;
-            direction.Normalize();
-            Vector3 v = direction * speed * Time.deltaTime;
-            transform.position += v;
+            // Vector3 direction = playPos - transform.position;
+            // direction.Normalize();
+            // Vector3 v = direction * speed * Time.deltaTime;
+            // transform.position += v;
+            transform.position = Vector3.MoveTowards(transform.position, playPos, speed * Time.deltaTime); // Replaces above to avoid it tweaking when very close to player
         }
     }
 }

@@ -113,7 +113,7 @@ public class MainPanelController : MonoBehaviour
 
     public void quitGame()
     {
-        Application.Quit();
+        globalSceneManager.quitGame();
     }
 
     public void openMain()

@@ -34,7 +34,7 @@ public class GlobalSceneManager : MonoBehaviour
         {Binds.Choice1, "Choice1Pref"},
         {Binds.Choice2, "Choice2Pref"}
     };
-    public Dictionary<Binds, KeyCode> keyBinds = new Dictionary<Binds, KeyCode>{};
+    public Dictionary<Binds, KeyCode> keyBinds = new Dictionary<Binds, KeyCode> { };
     public Dictionary<Binds, KeyCode> defaultKeyBinds = new Dictionary<Binds, KeyCode>
     {
         {Binds.Jump, KeyCode.Space},
@@ -143,15 +143,18 @@ public class GlobalSceneManager : MonoBehaviour
         setLevel(0);
         setDeathCount(0);
         SceneManager.LoadScene((int)SceneName.Game);
+        Cursor.visible = false;
     }
 
     public void continueGame()
     {
         SceneManager.LoadScene((int)SceneName.Game);
+        Cursor.visible = false;
     }
 
     public void enterMenu()
     {
+        Cursor.visible = true;
         SceneManager.LoadScene((int)SceneName.Menu);
     }
 
@@ -163,20 +166,33 @@ public class GlobalSceneManager : MonoBehaviour
 
     public void pauseScene()
     {
+        Cursor.visible = true;
         Time.timeScale = 0f;
         isBlocked = true;
     }
 
     public void resumeScene()
     {
+        Cursor.visible = false;
         Time.timeScale = 1f;
         StartCoroutine(resumeWithDelay());
     }
 
-  // Coroutine to delay resumption of inputs
-  private IEnumerator resumeWithDelay()
+    // Coroutine to delay resumption of inputs
+    private IEnumerator resumeWithDelay()
     {
         yield return new WaitForSeconds(resumeDelay);
         isBlocked = false; // Allow input after the delay
+    }
+
+    public void quitGame()
+    {
+        StartCoroutine(safeQuit());
+    }
+
+    private IEnumerator safeQuit()
+    {
+        yield return new WaitForEndOfFrame();
+        Application.Quit();
     }
 }

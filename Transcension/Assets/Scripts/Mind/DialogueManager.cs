@@ -258,6 +258,8 @@ public class DialogueManager : MonoBehaviour
 
         // final faid out
         yield return StartCoroutine(FadeOutText());
+
+        Cursor.visible = true;
         finalPage.SetActive(true);
         finalText.SetText("Total deaths: " + globalSceneManager.deathCount);
         globalSceneManager.finishSave();

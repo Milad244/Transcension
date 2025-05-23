@@ -35,8 +35,8 @@ public class CameraController : MonoBehaviour
 
     public void changeWallLimit(float posXMinLim_, float posXMaxLim_)
     {
-        Debug.Log(mainCamera.orthographicSize); //6
-        Debug.Log(mainCamera.aspect); //1.77836
+        //Debug.Log(mainCamera.orthographicSize); //6
+        //Debug.Log(mainCamera.aspect); //1.77836
         // Get the width of the camera's orthographic view
         float cameraHalfWidth = mainCamera.orthographicSize * mainCamera.aspect;
 
