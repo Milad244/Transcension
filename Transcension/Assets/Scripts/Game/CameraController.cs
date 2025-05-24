@@ -31,7 +31,7 @@ public class CameraController : MonoBehaviour
     /// <summary>
     /// Changes the minimum Y (floor) the camera can go.
     /// </summary>
-    /// <param name="floorLimit">The y poistion of the minimum limit the camera can go.</param>
+    /// <param name="floorLimit">The y position of the minimum limit the camera can go.</param>
     public void changeFloorLimit(float floorLimit)
     {
         this.floorLimit = floorLimit;

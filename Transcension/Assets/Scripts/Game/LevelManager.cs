@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// A serializable class that holds all the data needed to represent a level.
+/// </summary>
 [System.Serializable]
 public class Level
 {
@@ -43,6 +46,11 @@ public class Level
         }
     }
 
+    /// <summary>
+    /// Calculates an adjusted spawn position from the transform of a spawn to account for the player's height.
+    /// </summary>
+    /// <param name="spawnTransform">The spawn transform.</param>
+    /// <returns></returns>
     private Vector3 CalculateAdjustedPosition(Transform spawnTransform)
     {
         if (spawnTransform != null)

@@ -77,7 +77,7 @@ public class Boss : MonoBehaviour
         attackSetCoroutine = StartCoroutine(attackSet);
     }
 
-    public void startBossFight() //called from player movement when loading boss fight level or after dying in boss fight
+    public void startBossFight() //called from playerMovement when loading boss fight level or after dying in boss fight
     {
         deactivateFireballs();
         switch (stage)
@@ -336,7 +336,7 @@ public class Boss : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads winning mind scene
+    /// Loads winning mind scene.
     /// </summary>
     private void winBoss()
     {

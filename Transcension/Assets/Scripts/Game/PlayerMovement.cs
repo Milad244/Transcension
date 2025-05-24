@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
         currentLevel = globalSceneManager.level;
 
-        // Dealing with initial spawn
+        // Setup initial spawn
         loadLevel(levelManager.levels[currentLevel]);
     }
 
@@ -85,6 +85,9 @@ public class PlayerMovement : MonoBehaviour
             Jump();
     }
 
+    /// <summary>
+    /// Makes player jump with a set jumpPower y-velocity and triggers the jumping animation. Only jumps if player is on a ground.
+    /// </summary>
     private void Jump()
     {
         if (isGrounded())
@@ -94,15 +97,26 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Pushes the player down with a set ceilingPushPower y-velocity.
+    /// </summary>
     private void ceilingPush()
     {
         body.linearVelocity = new Vector2(body.linearVelocity.x, -ceilingPushPower);
     }
+
+    /// <summary>
+    /// Pushes the player up with a set ceilingPushPower y-velocity.
+    /// </summary>
     private void floorPush()
     {
         body.linearVelocity = new Vector2(body.linearVelocity.x, ceilingPushPower);
     }
 
+    /// <summary>
+    /// Checks if the player is standing on a ground layer using a raycast.
+    /// </summary>
+    /// <returns>True if player is grounded; otherwise false.</returns>
     private bool isGrounded()
     {
         float rayLength = 0.1f;
@@ -111,6 +125,9 @@ public class PlayerMovement : MonoBehaviour
         return rayCastHit.collider != null;
     }
 
+    /// <summary>
+    /// If player is below a Push, pushes player down using ceilingPush(). If player is above a Push, pushes player up using floorPush().
+    /// </summary>
     private void handlePush()
     {
         RaycastHit2D rayCastCeilingHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, 0.1f, pushLayer);
@@ -125,6 +142,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Starts player death, increments death count, resets movement, and triggers the death animation. 
+    /// Only runs if player is not already dying.
+    /// </summary>
     public void dieMovement()
     {
         if (dying)
@@ -136,6 +157,9 @@ public class PlayerMovement : MonoBehaviour
         anim.SetTrigger("die");
     }
 
+    /// <summary>
+    /// Teleports player back to their spawn position, resets the animation to idle, and sets the dying variable back to false.
+    /// </summary>
     public void reviveMovement()
     {
         transform.localPosition = revivePos;
@@ -143,6 +167,10 @@ public class PlayerMovement : MonoBehaviour
         dying = false;
     }
 
+    /// <summary>
+    /// Toggles the slow speed effect on or off, adjusting player speed accordingly, and stops any active speed particle effects.
+    /// </summary>
+    /// <param name="slow">True to slow down the player, false to return to normal speed.</param>
     public void toggleSpeedSlow(bool slow)
     {
         speedParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -157,14 +185,19 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // only used for speed boost
+    /// <summary>
+    /// Sets a new speed for the player as part of a speed boost and starts the speed particles effect.
+    /// </summary>
+    /// <param name="newSpeed">The new boosted speed value.</param>
     public void setSpeedBoost(float newSpeed)
     {
         speed = newSpeed;
         speedParticles.Play();
     }
 
-    // only used for speed boost
+    /// <summary>
+    /// Resets the player speed to default if not slowed and stops the speed particles effect.
+    /// </summary>
     public void setSpeedDefault()
     {
         speedParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -174,14 +207,23 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Teleports player to a given transform's position.
+    /// </summary>
+    /// <param name="position">The target transform to teleport the player to.</param>
     public void tellTo(Transform position)
     {
         transform.localPosition = position.position;
     }
 
+    /// <summary>
+    /// Calculates an adjusted Y position for the camera floor limit based on the floor's position and fixed offsets.
+    /// </summary>
+    /// <param name="floor">The transform of the floor to base the adjustment on.</param>
+    /// <returns>A float representing the adjusted Y position floor limit.</returns>
     private float adjustFloorLimit(Transform floor) //So camera doesn't show beneath floor
     {
-        return 2 + floor.position.y + 1; // Y-Size of ground + y position of ground + playerheight DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
+        return 2 + floor.position.y + 1; // Y-Size of ground + Y position of floor + player height. DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
     }
 
     /// <summary>
@@ -200,6 +242,13 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Loads a level: sets the player's spawn position and teleports the player there.
+    /// Updates the camera's floor and wall limits based on the level.
+    /// Loads the level's content and transitions into the mind if its the first visit.
+    /// Starts the boss fight if the level is 5.
+    /// </summary>
+    /// <param name="level">The level to load.</param>
     public void loadLevel(Level level)
     {
         revivePos = level.spawnRevive;
@@ -222,6 +271,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the current level based on the given transcend object's associated level and loads it.
+    /// </summary>
+    /// <param name="transcendObject">The GameObject representing the transcend object linked to a level.</param>
     public void transcend(GameObject transcendObject)
     {
         foreach (Level level in levelManager.levels)
@@ -235,9 +288,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the spawnpoint of the player to the current level's hard spawn.
+    /// </summary>
     public void hardSpawn()
     {
-        int currentLevel = globalSceneManager.level;
         Level currentLevelObject = null;
 
         foreach (Level level in levelManager.levels)
@@ -259,9 +314,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Starts the boss fight. If player is dying, waits until they stop dying before starting.
+    /// </summary>
     public IEnumerator startBoss()
     {
-        yield return new WaitWhile(() => dying == true); //waiting if player is dead
+        yield return new WaitWhile(() => dying == true); // waiting if player is dead
         GameObject.Find("Boss").GetComponent<Boss>().startBossFight();
     }
 }
