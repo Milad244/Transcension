@@ -27,22 +27,28 @@ public class Boss : MonoBehaviour
         buildFireballs();
     }
 
+    /// <summary>
+    /// Fills my firePoints array with all the points a fireball can potentially fire from - spaced equally between the firepoints limits.
+    /// </summary>
     private void buildFirePoints()
     {
         worldFirePointLeftLim = firePointLeftLim.position;
         worldFirePointRightLim = firePointRightLim.position;
 
-        firePoints = new Vector3[firePointCount+1]; 
+        firePoints = new Vector3[firePointCount + 1];
         float firePointRange = worldFirePointRightLim.x - worldFirePointLeftLim.x;
         float intervalLength = firePointRange / firePointCount;
         for (int i = 0; i <= firePointCount; i++)
         {
             float x = worldFirePointLeftLim.x + intervalLength * i;
             firePoints[i] = new Vector3(x, worldFirePointLeftLim.y, worldFirePointLeftLim.z);
-            Debug.DrawRay(firePoints[i], Vector3.up * 2f, Color.red, 15f);
+            //Debug.DrawRay(firePoints[i], Vector3.up * 2f, Color.red, 15f);
         }
     }
 
+    /// <summary>
+    /// Creates, stores, and deactivates fireballs to be used.
+    /// </summary>
     private void buildFireballs()
     {
         fireballs = new GameObject[fireballCount];
@@ -54,7 +60,7 @@ public class Boss : MonoBehaviour
         }
     }
 
-    private void stopFireballs()
+    private void deactivateFireballs()
     {
         for (int i = 0; i < fireballs.Length; i++)
         {
@@ -71,9 +77,9 @@ public class Boss : MonoBehaviour
         attackSetCoroutine = StartCoroutine(attackSet);
     }
 
-    public void startBossFight() //called from player movement
+    public void startBossFight() //called from player movement when loading boss fight level or after dying in boss fight
     {
-        stopFireballs();
+        deactivateFireballs();
         switch (stage)
         {
             case 1:
@@ -107,6 +113,9 @@ public class Boss : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Waits until all fireballs are deactivated.
+    /// </summary>
     public IEnumerator waitForAllFireballsInactive()
     {
         while (anyFireballActive())
@@ -115,7 +124,11 @@ public class Boss : MonoBehaviour
         }
     }
 
+    // Each attack set can be thought of as a stage. I do reuse a ton of code here but it was because I wanted to have easy customization of each level.
 
+    /// <summary>
+    /// Attack set 1 fires fireballs straight down.
+    /// </summary>
     private IEnumerator attackSet1()
     {
         StartCoroutine(uiControl.updateHealthBar(currentHealth, currentHealth));
@@ -155,7 +168,10 @@ public class Boss : MonoBehaviour
         stage = 2;
     }
 
-    private IEnumerator attackSet2() // 3 set fireballs
+    /// <summary>
+    /// Attack set 2 fires sets of 3 fireballs straight down.
+    /// </summary>
+    private IEnumerator attackSet2()
     {
         float setTime = 20f;
         float elapsed = 0f;
@@ -187,12 +203,15 @@ public class Boss : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         startAttackCoroutine(attackSet3());
-        
+
         currentHealth -= healthDropPerSet;
         stage = 3;
     }
 
-    private IEnumerator attackSet3() // diagonal fireballs
+    /// <summary>
+    /// Attack set 3 fires diagonal fireballs.
+    /// </summary>
+    private IEnumerator attackSet3()
     {
         float setTime = 20f;
         float elapsed = 0f;
@@ -231,12 +250,15 @@ public class Boss : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         startAttackCoroutine(attackSet4());
-        
+
         currentHealth -= healthDropPerSet;
         stage = 4;
     }
 
-    private IEnumerator attackSet4() // slow falling fireballs
+    /// <summary>
+    /// Attack set 4 fires slow falling straight down fireballs.
+    /// </summary>
+    private IEnumerator attackSet4()
     {
         float setTime = 20f;
         float elapsed = 0f;
@@ -267,12 +289,15 @@ public class Boss : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         startAttackCoroutine(attackSet5());
-        
+
         currentHealth -= healthDropPerSet;
         stage = 5;
     }
 
-    private IEnumerator attackSet5() //making it into continous fireballs
+    /// <summary>
+    /// Attack set 5 fires fireballs straight down in a set pattern.
+    /// </summary>
+    private IEnumerator attackSet5()
     {
         float setTime = 20f;
         float elapsed = 0f;
@@ -302,7 +327,7 @@ public class Boss : MonoBehaviour
 
         if (GameObject.Find("Player").GetComponent<PlayerMovement>().dying)
             yield break;
-            
+
         StartCoroutine(uiControl.updateHealthBar(currentHealth, currentHealth - healthDropPerSet));
         yield return new WaitForSeconds(3);
 
@@ -310,12 +335,20 @@ public class Boss : MonoBehaviour
         winBoss();
     }
 
+    /// <summary>
+    /// Loads winning mind scene
+    /// </summary>
     private void winBoss()
     {
         uiControl.mindTransition();
         globalSceneManager.loadMindScene("tran5");
     }
     
+    /// <summary>
+    /// Fires a fireball from a given firepoint with a given velocity.
+    /// </summary>
+    /// <param name="firePointI">The index of the firepoint.</param>
+    /// <param name="velocity">The velocity of the fireball.</param>
     private void attack(int firePointI, Vector3 velocity)
     {
         int index = findFireball();
@@ -323,11 +356,15 @@ public class Boss : MonoBehaviour
         fireballs[index].GetComponent<Fireball>().setFireball(velocity);
     }
 
+    /// <summary>
+    /// Finds the index of the first inactive fireball in the fireballs array. If all fireballs are active, returns 0.
+    /// </summary>
+    /// <returns>The index of an available (inactive) fireball, or 0 if all are active.</returns>
     private int findFireball()
     {
         for (int i = 0; i < fireballs.Length; i++)
         {
-            if(!fireballs[i].activeInHierarchy)
+            if (!fireballs[i].activeInHierarchy)
                 return i;
         }
         return 0;

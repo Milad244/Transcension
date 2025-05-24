@@ -19,7 +19,6 @@ public class Head : MonoBehaviour
 
     private IEnumerator deactivate()
     {
-        Debug.Log("1");
         activated = false;
         yield return new WaitForSeconds(0.5f);// delay after killing you 
         while (Vector3.Distance(transform.position, oriPos) > 1f)
@@ -29,12 +28,11 @@ public class Head : MonoBehaviour
             Vector3 v = direction * speed * Time.deltaTime;
             transform.position += v;
 
-            Debug.Log(Vector3.Distance(transform.position, oriPos));
             yield return null;
         }
+        
         transform.position = oriPos;
 
-        Debug.Log("3");
         anim.SetTrigger("deactivate");
         if (headDetect)
         {

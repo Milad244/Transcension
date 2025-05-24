@@ -184,6 +184,22 @@ public class PlayerMovement : MonoBehaviour
         return 2 + floor.position.y + 1; // Y-Size of ground + y position of ground + playerheight DOES NOT WORK FOR ANY SCALE OTHER THAN 2!
     }
 
+    /// <summary>
+    /// Activates the content of the given level and deactivates all the other levels' content.
+    /// </summary>
+    private void loadContent(Level levelToLoad)
+    {
+        levelToLoad.content.SetActive(true);
+
+        foreach (Level level in levelManager.levels)
+        {
+            if (level != levelToLoad)
+            {
+                level.content.SetActive(false);
+            }
+        }
+    }
+
     public void loadLevel(Level level)
     {
         revivePos = level.spawnRevive;
@@ -192,7 +208,9 @@ public class PlayerMovement : MonoBehaviour
         cameraController.changeFloorLimit(adjustFloorLimit(level.ground));
         cameraController.changeWallLimit(level.wallMinLimitX, level.wallMaxLimitX);
 
-        if (!level.mindLevel.Equals("") && currentLevel != level.level)
+        loadContent(level);
+
+        if (!level.mindLevel.Equals("") && currentLevel != level.level) // only go to mind if its the first time visiting the level
         {
             uiControl.mindTransition();
             globalSceneManager.loadMindScene(level.mindLevel);

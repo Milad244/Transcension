@@ -20,24 +20,29 @@ public class Fireball : MonoBehaviour
     {
         if (hit) return;
 
-        // fireball flying
+        // moves the fireball forward based on how fast it's going. Always moves right, direction (rotation) happens in setFireball method.
         transform.Translate(Vector3.right * velocity.magnitude * Time.deltaTime);
 
-        // ending fireball after X seconds
+        // disabling fireball after X seconds
         lifetime += Time.deltaTime;
-        if (lifetime > maxLife)gameObject.SetActive(false);
+        if (lifetime > maxLife)
+            gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Fireball")
+        if (collision.tag == "Fireball") // do not explode against fireballs
             return;
 
         hit = true;
         boxCollider.enabled = false;
-        anim.SetTrigger("explode");
+        anim.SetTrigger("explode"); // causing fireball explode animation
     }
 
+    /// <summary>
+    /// Activates fireball with a given velocity and rotates itself appropriatly for that velocity.
+    /// </summary>
+    /// <param name="velocity">The new velocity of the fireball.</param>
     public void setFireball(Vector3 velocity)
     {
         lifetime = 0;
@@ -47,6 +52,8 @@ public class Fireball : MonoBehaviour
 
         this.velocity = velocity;
 
+        // points the fireball in the direction it's flying.
+        // uses velocity to calculate angle and rotate the fireball to match.
         float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
