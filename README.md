@@ -1,7 +1,7 @@
 # Transcension
 
 ## Access
-[Release](https://drive.google.com/drive/folders/1GW2xfNTXucUDYwgfJ1mUfnLn26lJOLyx?usp=sharing).
+Release: https://drive.google.com/drive/folders/1GW2xfNTXucUDYwgfJ1mUfnLn26lJOLyx?usp=sharing
 
 ## Description
 Transcension is a 2D game I developed myself. Trapped inside your mind, you must traverse a treacherous path, overcome various traps, and defeat the guard of your prison. For the first time, I recorded my entire journey of creating this game on YouTube in this [playlist](https://www.youtube.com/playlist?list=PLesP53Zl6Cp2Jux0-xHTzYutJgp_b2mdj).
