@@ -36,12 +36,19 @@ public class UIControl : MonoBehaviour
         };
     }
 
-  public void mindTransition()
+    /// <summary>
+    /// Activates a black panel for transitioning into the mind.
+    /// </summary>
+    public void mindTransition()
     {
         transitionPanel.SetActive(true);
         transitionText.SetText("");
     }
 
+    /// <summary>
+    /// Gets a tip message from a given tipType. If the tip is currently showing, it will close the tip. If the tip hasn't been shown before, it will show the tip.
+    /// </summary>
+    /// <param name="tipType">The type of tip.</param>
     public void showTip(TipType tipType)
     {
 
@@ -59,6 +66,9 @@ public class UIControl : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Closes the currently shown tip and adds it to the finishedTips hashset.
+    /// </summary>
     public void closeTip()
     {
         if (!string.IsNullOrEmpty(currentTip))
@@ -69,6 +79,10 @@ public class UIControl : MonoBehaviour
         tipText.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Shows the transcend tip when true. Otherwise, disables it.
+    /// </summary>
+    /// <param name="active">True to show the tip, false to disable it.</param>
     public void transcendTipActive(bool active)
     {
         if (active)
@@ -83,6 +97,9 @@ public class UIControl : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Closes the transcend tip if in the game scene.
+    /// </summary>
     private void disableTipIfInGameScene()
     {
         if (this != null && SceneManager.GetActiveScene().name == "Game")
@@ -91,6 +108,11 @@ public class UIControl : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Smoothly animates the boss fight's health bar from an initial value to a final value.
+    /// </summary>
+    /// <param name="from">Boss's intial health.</param>
+    /// <param name="to">Boss's final health.</param>
     public IEnumerator updateHealthBar(float from, float to)
     {
         bossUI.SetActive(true);

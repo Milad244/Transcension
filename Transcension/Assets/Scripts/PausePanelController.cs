@@ -19,6 +19,9 @@ public class PausePanelController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Toggles the game's paused state and pauses or unpauses the game accordingly.
+    /// </summary>
     public void TogglePause()
     {
         paused = !paused;
@@ -35,12 +38,18 @@ public class PausePanelController : MonoBehaviour
         pauseMenu.SetActive(paused);
     }
 
+    /// <summary>
+    /// Returns the user to the menu scene.
+    /// </summary>
     public void returnToMenu()
     {
         TogglePause();
         globalSceneManager.enterMenu();
     }
 
+    /// <summary>
+    /// Quits the game.
+    /// </summary>
     public void quitGame()
     {
         globalSceneManager.quitGame();

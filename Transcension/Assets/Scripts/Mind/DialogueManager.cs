@@ -40,24 +40,30 @@ public class DialogueManager : MonoBehaviour
         resetDialogue();
         loadDialogue(globalSceneManager.diaLevel);
         displayDialogue(currentDialogueId);
-        loadTip(globalSceneManager.diaLevel);
+        loadExtras(globalSceneManager.diaLevel);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Choice1]))
+        if (Input.GetKeyDown(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Choice1])) // selects the first dialogue choice
         {
             playerOptionIndex = 0;
             selectOption();
         }
-        else if (Input.GetKeyDown(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Choice2]) && choice)
+        else if (Input.GetKeyDown(globalSceneManager.keyBinds[GlobalSceneManager.Binds.Choice2]) && choice) // selects the second dialogue choice
         {
             playerOptionIndex = 1;
             selectOption();
         }
     }
 
-    private void loadTip(string key)
+    /// <summary>
+    /// Loads extra features based on the dialogue level. 
+    /// If it's the intro dialogue, displays the dialogue tip to help the user.
+    /// If it's the tran5 dialogue (the final one), enables the light dialogue boolean flag which alters the mind logic appropriately for the finale.
+    /// </summary>
+    /// <param name="key">The key of the current Dialogue Tree</param>
+    private void loadExtras(string key)
     {
         if (key == "intro")
         {
@@ -69,6 +75,10 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Loads the dialogue JSON file, gets the dialogue tree matching the given key, and populates the dialogue nodes dictionary.
+    /// </summary>
+    /// <param name="key">The key representing the desired dialogue tree.</param>
     private void loadDialogue(string key)
     {
         if (jsonDialogue == null)
@@ -100,6 +110,10 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Displays the mind dialogue and player dialogue choices for the given dialogue node id.
+    /// </summary>
+    /// <param name="id">The id of the dialogue node to display.</param>
     private void displayDialogue(int id)
     {
         if (!dialogueNodes.ContainsKey(id))
@@ -113,7 +127,7 @@ public class DialogueManager : MonoBehaviour
         {
             StopCoroutine(dialogueCoroutine);  // Stop any previous coroutine
         }
-        if (writingDiaCoroutine != null) // Not allowed to continue current dialogue is finished
+        if (writingDiaCoroutine != null) // Not allowed to continue dialogue until mind is finished writing
             return;
 
         writingDiaCoroutine = StartCoroutine(writeDialogue(node.dialogue));
@@ -136,6 +150,11 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Writes the mind dialogue animated.
+    /// </summary>
+    /// <param name="dialogue">The mind dialogue to write.</param>
+    /// <returns></returns>
     private IEnumerator writeDialogue(string dialogue)
     {
         string dialogueWriting = "";
@@ -148,14 +167,12 @@ public class DialogueManager : MonoBehaviour
         writingDiaCoroutine = null;
     }
 
-    public void writeNext(string dialogueWriting)
-    {
-        mindDia.SetText(dialogueWriting);
-    }
-
+    /// <summary>
+    /// Finalizes the user's dialogue choice and loads the next dialogue or exits the mind scene accordingly.
+    /// </summary>
     private void selectOption()
     {
-        if (writingDiaCoroutine != null) // Not allowed to continue current dialogue is finished
+        if (writingDiaCoroutine != null) // Not allowed to continue dialogue until mind is finished writing
             return;
 
         if (!dialogueNodes.ContainsKey(currentDialogueId))
@@ -182,6 +199,9 @@ public class DialogueManager : MonoBehaviour
         displayDialogue(currentDialogueId);
     }
 
+    /// <summary>
+    /// Resets all the dialogue texts and deactivates all the player dialogue choice pages.
+    /// </summary>
     private void resetDialogue()
     {
         choicePage.SetActive(false);
@@ -193,6 +213,9 @@ public class DialogueManager : MonoBehaviour
         lightDiaText.SetText("");
     }
 
+    /// <summary>
+    /// Goes back to the game scene unless final mind level.
+    /// </summary>
     private void endMind()
     {
         if (GlobalSceneManager.Instance != null)
@@ -208,12 +231,18 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Starts the game ending dialogue.
+    /// </summary>
     private void playLightDia()
     {
         resetDialogue();
         StartCoroutine(bringLight());
     }
 
+    /// <summary>
+    /// Turns on the light background slowly and starts the game ending dialogue writing. 
+    /// </summary>
     IEnumerator bringLight()
     {
         lightBackground.SetActive(true);
@@ -234,6 +263,9 @@ public class DialogueManager : MonoBehaviour
         StartCoroutine(writeLightDia());
     }
 
+    /// <summary>
+    /// Fades in and out each ending dialogue. After the final ending dialogue, enables the cursor and shows the ending page to the user (where they can go back to the menu).
+    /// </summary>
     IEnumerator writeLightDia()
     {
         string[] lines = new string[]
@@ -256,7 +288,7 @@ public class DialogueManager : MonoBehaviour
             yield return new WaitForSeconds(lineDelay);
         }
 
-        // final faid out
+        // final fade out
         yield return StartCoroutine(FadeOutText());
 
         Cursor.visible = true;
@@ -265,11 +297,17 @@ public class DialogueManager : MonoBehaviour
         globalSceneManager.finishSave();
     }
 
+    /// <summary>
+    /// Goes back to the menu scene.
+    /// </summary>
     public void finishBtn()
     {
         globalSceneManager.enterMenu();
     }
 
+    /// <summary>
+    /// Fades in text.
+    /// </summary>
     IEnumerator FadeInText()
     {
         float timer = 0f;
@@ -285,6 +323,9 @@ public class DialogueManager : MonoBehaviour
         lightDiaText.color = c;
     }
 
+    /// <summary>
+    /// Fades out text.
+    /// </summary>
     IEnumerator FadeOutText()
     {
         float timer = 0f;

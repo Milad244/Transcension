@@ -26,6 +26,10 @@ public class MainPanelController : MonoBehaviour
     {
         globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
     }
+
+    /// <summary>
+    /// Stops the bind coroutine and closes all the menu pages.
+    /// </summary>
     private void closeAll()
     {
         bindPage.SetActive(false);
@@ -40,6 +44,9 @@ public class MainPanelController : MonoBehaviour
         creditsPage.SetActive(false);
     }
 
+    /// <summary>
+    /// Opens the play page where the user can choose to play.
+    /// </summary>
     public void openPlayPage()
     {
         closeAll();
@@ -47,6 +54,9 @@ public class MainPanelController : MonoBehaviour
         handleContinue();
     }
 
+    /// <summary>
+    /// Disables the continue button if the save level is 0.
+    /// </summary>
     private void handleContinue()
     {
         if (globalSceneManager.level == 0)
@@ -55,12 +65,18 @@ public class MainPanelController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Opens the credits page where the user can see my name and my project's GitHub.
+    /// </summary>
     public void openCredits()
     {
         closeAll();
         creditsPage.SetActive(true);
     }
 
+    /// <summary>
+    /// Opens the settings page where the user can change some keybinds.
+    /// </summary>
     public void openSettings()
     {
         closeAll();
@@ -68,6 +84,9 @@ public class MainPanelController : MonoBehaviour
         loadPrefs();
     }
 
+    /// <summary>
+    /// Loads the current keybinds and displays them to the user.
+    /// </summary>
     private void loadPrefs()
     {
         Dictionary<GlobalSceneManager.Binds, KeyCode> d = globalSceneManager.keyBinds;
@@ -78,6 +97,10 @@ public class MainPanelController : MonoBehaviour
         choice2Text.SetText(globalSceneManager.cleanKeyCode(d[GlobalSceneManager.Binds.Choice2]));
     }
 
+    /// <summary>
+    /// Starts the set bind coroutine with an index that represents the bind to change.
+    /// </summary>
+    /// <param name="bindIndex">The index of the bind to change.</param>
     public void rebind(int bindIndex)
     {
         if (bindCoroutine != null)
@@ -87,13 +110,19 @@ public class MainPanelController : MonoBehaviour
         StartCoroutine(getNextKey(bindIndex));
     }
 
+    /// <summary>
+    /// Activates the pick bind page. 
+    /// Waits for the user to press a key to rebind the bind represented by the given bind index. 
+    /// Then, closes the pick bind page and reloads all the binds.
+    /// </summary>
+    /// <param name="bindIndex">The index of the bind to change.</param>
     private IEnumerator getNextKey(int bindIndex)
     {
         GlobalSceneManager.Binds bind = (GlobalSceneManager.Binds)bindIndex;
         bindPage.SetActive(true);
 
         bool keyPressed = false;
-        
+
         while (!keyPressed)
         {
             foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
@@ -111,22 +140,34 @@ public class MainPanelController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Quits the game.
+    /// </summary>
     public void quitGame()
     {
         globalSceneManager.quitGame();
     }
 
+    /// <summary>
+    /// Opens the main page where the user can select other pages.
+    /// </summary>
     public void openMain()
     {
         closeAll();
         mainPage.SetActive(true);
     }
 
+    /// <summary>
+    /// Continues the current save.
+    /// </summary>
     public void continueGame()
     {
         globalSceneManager.continueGame();
     }
 
+    /// <summary>
+    /// Starts a new save.
+    /// </summary>
     public void playNewGame()
     {
         globalSceneManager.startNewGame();

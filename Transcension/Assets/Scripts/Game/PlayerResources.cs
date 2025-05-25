@@ -7,7 +7,7 @@ public class PlayerResources : MonoBehaviour
     private PlayerMovement playerMovement;
     private bool canTranscend;
     private GameObject transcendLevel;
-    private List<GameObject> deactiveMineTriggers;
+    private List<GameObject> deactivatedMineTriggers;
     private GlobalSceneManager globalSceneManager;
     private UIControl uiControl;
     private List<Head> activeHeads;
@@ -15,7 +15,7 @@ public class PlayerResources : MonoBehaviour
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
-        deactiveMineTriggers = new List<GameObject>();
+        deactivatedMineTriggers = new List<GameObject>();
         activeHeads = new List<Head>();
         globalSceneManager = GameObject.Find("GlobalManager").GetComponent<GlobalSceneManager>();
         uiControl = GameObject.Find("Canvas UI").GetComponent<UIControl>();
@@ -47,7 +47,7 @@ public class PlayerResources : MonoBehaviour
         if (col.CompareTag("MTrigger"))
         {
             setMine(colGameObj.transform.position);
-            deactiveMineTriggers.Add(colGameObj);
+            deactivatedMineTriggers.Add(colGameObj);
             colGameObj.SetActive(false);
         }
 
@@ -92,26 +92,33 @@ public class PlayerResources : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Kills the player.
+    /// </summary>
     public void die()
     {
         playerMovement.dieMovement();
     }
 
-    private void revive() //Called in animation
+    /// <summary>
+    /// Revives the player and clears all the activated traps Lists.
+    /// </summary>
+    private void revive() //Called after dying animation finishes
     {
         playerMovement.reviveMovement();
 
-        if (deactiveMineTriggers != null)
+        if (deactivatedMineTriggers != null)
         {
-            foreach (GameObject deactiveMineTrigger in deactiveMineTriggers) 
+            foreach (GameObject deactivatedMineTrigger in deactivatedMineTriggers)
             {
-                deactiveMineTrigger.SetActive(true);
+                deactivatedMineTrigger.SetActive(true);
             }
-            deactiveMineTriggers.Clear();
+            deactivatedMineTriggers.Clear();
         }
-        
-        if (activeHeads != null) {
-            foreach (Head head in activeHeads) 
+
+        if (activeHeads != null)
+        {
+            foreach (Head head in activeHeads)
             {
                 head.GetComponent<Head>().startDeactivate();
             }
@@ -119,6 +126,10 @@ public class PlayerResources : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates a mine above the given mine trigger position.
+    /// </summary>
+    /// <param name="tPosition">The position of the mine trigger.</param>
     private void setMine(Vector3 tPosition)
     {
         Vector3 mPosition = new Vector3(tPosition.x, tPosition.y + 10, tPosition.z);

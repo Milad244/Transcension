@@ -9,7 +9,9 @@ public class Speed : MonoBehaviour
 
   private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag == "Player") {
+        // Activates speed when player steps on it.
+        if (col.tag == "Player")
+        {
             if (speedCoroutine != null)
                 StopCoroutine(speedCoroutine);
 
@@ -17,14 +19,19 @@ public class Speed : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Activates a speed boost for the player. The boost starts when the player enters and lasts for a set duration after the player leaves the trigger area.
+    /// </summary>
+    /// <param name="col">The player's collider.</param>
     private IEnumerator activateSpeed(Collider2D col)
     {
         col.GetComponent<PlayerMovement>().setSpeedBoost(speedBoost);
 
         Collider2D player = Physics2D.OverlapBox(transform.position, GetComponent<Collider2D>().bounds.size, 0, LayerMask.GetMask("Player"));
-        while (player) {
+        while (player)
+        {
             player = Physics2D.OverlapBox(transform.position, GetComponent<Collider2D>().bounds.size, 0, LayerMask.GetMask("Player"));
-            yield return new WaitForSeconds(0.01f); //so game doesn't crash :)
+            yield return null;
         }
         yield return new WaitForSeconds(speedBoostDuration);
 

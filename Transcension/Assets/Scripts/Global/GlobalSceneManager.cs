@@ -43,6 +43,10 @@ public class GlobalSceneManager : MonoBehaviour
         {Binds.Choice2, KeyCode.Alpha2}
     };
 
+    /// <summary>
+    /// Goes through all the playerPref keys and sets the keybind for each.
+    /// If a playerPref exists, it uses that key. Otherwise, it assigns the default key.
+    /// </summary>
     public void getBinds()
     {
         foreach (KeyValuePair<Binds, string> entry in bindPrefs)
@@ -60,6 +64,11 @@ public class GlobalSceneManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets a new key to a bind and saves it in playerPrefs.
+    /// </summary>
+    /// <param name="bind">The bind to set.</param>
+    /// <param name="newKey">The new key of the bind.</param>
     public void setBind(Binds bind, KeyCode newKey)
     {
         keyBinds[bind] = newKey;
@@ -67,31 +76,52 @@ public class GlobalSceneManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    /// <summary>
+    /// Gets a cleaner string to represent a given key for the user.
+    /// </summary>
+    /// <param name="keyCode">The key to clean.</param>
+    /// <returns>The cleaned key.</returns>
     public string cleanKeyCode(KeyCode keyCode)
     {
         string keyString = keyCode.ToString();
         return Regex.Replace(keyString, @"Alpha(\d)", "$1");
     }
 
+    /// <summary>
+    /// Sets the new level of the game and saves it in playerPrefs.
+    /// </summary>
+    /// <param name="level_">The new level of the game.</param>
     public void setLevel(int level_)
     {
         level = level_;
         PlayerPrefs.SetInt(levelPref, level);
         PlayerPrefs.Save();
     }
+
+    /// <summary>
+    /// Sets the new death count and saves it in playerPrefs.
+    /// </summary>
+    /// <param name="deathCount_">The new death count.</param>
     private void setDeathCount(int deathCount_)
     {
         deathCount = deathCount_;
         PlayerPrefs.SetInt(deathCountPref, deathCount);
         PlayerPrefs.Save();
     }
-    public void addToDeathCount()
+
+    /// <summary>
+    /// Increments the death count and saves it in playerPrefs.
+    /// </summary>
+    public void incrementDeathCount()
     {
         deathCount++;
         PlayerPrefs.SetInt(deathCountPref, deathCount);
         PlayerPrefs.Save();
     }
 
+    /// <summary>
+    /// Gets the level from playerPrefs if it exists. Otherwise, sets the level at 0.
+    /// </summary>
     private void getLevelForAwake()
     {
         if (PlayerPrefs.HasKey(levelPref))
@@ -104,6 +134,9 @@ public class GlobalSceneManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets the death count from playerPrefs if it exists. Otherwise, sets the death count at 0.
+    /// </summary>
     private void getDeathForAwake()
     {
         if (PlayerPrefs.HasKey(deathCountPref))
@@ -118,6 +151,7 @@ public class GlobalSceneManager : MonoBehaviour
 
     private void Awake()
     {
+        // If an instance of globalSceneManager doesn't exist, make this one that instance. Otherwise, destory this duplicate instance.
         if (Instance == null)
         {
             Instance = this;
@@ -132,12 +166,18 @@ public class GlobalSceneManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Resets the level and death count to 0 because the save is finished (user finished the game).
+    /// </summary>
     public void finishSave()
     {
         setLevel(0);
         setDeathCount(0);
     }
 
+    /// <summary>
+    /// Starts a new game with the level and death count set to 0. Loads the game scene and turns off the cursor.
+    /// </summary>
     public void startNewGame()
     {
         setLevel(0);
@@ -146,24 +186,37 @@ public class GlobalSceneManager : MonoBehaviour
         Cursor.visible = false;
     }
 
+    /// <summary>
+    /// Continues the user's existing save. Loads the game scene and turns off the cursor.
+    /// </summary>
     public void continueGame()
     {
         SceneManager.LoadScene((int)SceneName.Game);
         Cursor.visible = false;
     }
 
+    /// <summary>
+    /// Loads the menu scene and turns on the cursor.
+    /// </summary>
     public void enterMenu()
     {
         Cursor.visible = true;
         SceneManager.LoadScene((int)SceneName.Menu);
     }
 
+    /// <summary>
+    /// Loads the mind scene with a given dialogue level.
+    /// </summary>
+    /// <param name="diaLevel">The dialogue level.</param>
     public void loadMindScene(string diaLevel)
     {
         this.diaLevel = diaLevel;
         SceneManager.LoadScene((int)SceneName.Mind);
     }
 
+    /// <summary>
+    /// Turns on the cursor, stops time, and enables the isBlocked boolean flag.
+    /// </summary>
     public void pauseScene()
     {
         Cursor.visible = true;
@@ -171,6 +224,9 @@ public class GlobalSceneManager : MonoBehaviour
         isBlocked = true;
     }
 
+    /// <summary>
+    /// Turns off the cursor, unstops time, and calls resumeWithDelay().
+    /// </summary>
     public void resumeScene()
     {
         Cursor.visible = false;
@@ -178,18 +234,27 @@ public class GlobalSceneManager : MonoBehaviour
         StartCoroutine(resumeWithDelay());
     }
 
-    // Coroutine to delay resumption of inputs
+    /// <summary>
+    /// Disables the isBlocked boolean flag after a set resume delay passes.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator resumeWithDelay()
     {
         yield return new WaitForSeconds(resumeDelay);
         isBlocked = false; // Allow input after the delay
     }
 
+    /// <summary>
+    /// Safely quits the game.
+    /// </summary>
     public void quitGame()
     {
         StartCoroutine(safeQuit());
     }
 
+    /// <summary>
+    /// Waits for the last frame and quits the application. This way we avoid other code interfering with our quitting - which can lead to crashes.
+    /// </summary>
     private IEnumerator safeQuit()
     {
         yield return new WaitForEndOfFrame();
