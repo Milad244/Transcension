@@ -243,7 +243,7 @@ public class DialogueManager : MonoBehaviour
     /// <summary>
     /// Turns on the light background slowly and starts the game ending dialogue writing. 
     /// </summary>
-    IEnumerator bringLight()
+    private IEnumerator bringLight()
     {
         lightBackground.SetActive(true);
         Image lightImage = lightBackground.GetComponent<Image>();
@@ -266,7 +266,7 @@ public class DialogueManager : MonoBehaviour
     /// <summary>
     /// Fades in and out each ending dialogue. After the final ending dialogue, enables the cursor and shows the ending page to the user (where they can go back to the menu).
     /// </summary>
-    IEnumerator writeLightDia()
+    private IEnumerator writeLightDia()
     {
         string[] lines = new string[]
         {
@@ -291,10 +291,28 @@ public class DialogueManager : MonoBehaviour
         // final fade out
         yield return StartCoroutine(FadeOutText());
 
-        Cursor.visible = true;
         finalPage.SetActive(true);
         finalText.SetText("Total deaths: " + globalSceneManager.deathCount);
         globalSceneManager.finishSave();
+
+        StartCoroutine(keepCursorVisible());
+    }
+
+    /// <summary>
+    /// Keeps the cursor visible forever.
+    /// </summary>
+    private IEnumerator keepCursorVisible()
+    {
+        while (true)
+        {
+            if (!Cursor.visible)
+            {
+                Cursor.visible = true;
+                Debug.Log("Cursor was hidden, re-enabled it.");
+            }
+
+            yield return null;
+        }
     }
 
     /// <summary>
@@ -308,7 +326,7 @@ public class DialogueManager : MonoBehaviour
     /// <summary>
     /// Fades in text.
     /// </summary>
-    IEnumerator FadeInText()
+    private IEnumerator FadeInText()
     {
         float timer = 0f;
         Color c = lightDiaText.color;
@@ -326,7 +344,7 @@ public class DialogueManager : MonoBehaviour
     /// <summary>
     /// Fades out text.
     /// </summary>
-    IEnumerator FadeOutText()
+    private IEnumerator FadeOutText()
     {
         float timer = 0f;
         Color c = lightDiaText.color;
