@@ -119,9 +119,10 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>True if player is grounded; otherwise false.</returns>
     private bool isGrounded()
     {
-        float rayLength = 0.1f;
-        Vector2 rayOrigin = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.min.y);
-        RaycastHit2D rayCastHit = Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, groundLayer);
+        Vector2 boxCenter = boxCollider.bounds.center;
+        Vector2 boxSize = boxCollider.bounds.size;
+        float castDistance = 0.1f;
+        RaycastHit2D rayCastHit = Physics2D.BoxCast(boxCenter, boxSize, 0, Vector2.down, castDistance, groundLayer);
         return rayCastHit.collider != null;
     }
 
@@ -154,6 +155,7 @@ public class PlayerMovement : MonoBehaviour
         globalSceneManager.incrementDeathCount();
         body.linearVelocity = new Vector2(0, 0);
         setSpeedDefault();
+        //body.constraints = RigidbodyConstraints2D.FreezeAll;
         anim.SetTrigger("die");
     }
 
@@ -162,6 +164,7 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     public void reviveMovement()
     {
+        //body.constraints = RigidbodyConstraints2D.FreezeRotation;
         transform.localPosition = revivePos;
         anim.SetTrigger("returnIdle");
         dying = false;

@@ -80,7 +80,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1154449387
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 1033148481, guid: cf04b67e606d42840b03627c1fb15141, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -123,7 +123,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -151,9 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3372bbff91fefde4a99a8ed3d7ba4125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laserBeamPrefab: {fileID: 2587739972827757630, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
   spinSpeed: -150
-  laserLength: 3
 --- !u!1001 &1744600434469475835
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -208,7 +206,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4957828915388178298, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4957828915388178298, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayerID
@@ -216,7 +214,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5751913573089401336, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5751913573089401336, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayerID
@@ -298,7 +296,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4957828915388178298, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4957828915388178298, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayerID
@@ -306,7 +304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5751913573089401336, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5751913573089401336, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayerID
@@ -388,7 +386,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4957828915388178298, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4957828915388178298, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayerID
@@ -396,7 +394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5751913573089401336, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5751913573089401336, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayerID
@@ -478,7 +476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4957828915388178298, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4957828915388178298, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayerID
@@ -486,7 +484,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5751913573089401336, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5751913573089401336, guid: 079ce9380cfc0084fb8398733f28b9f3, type: 3}
       propertyPath: m_SortingLayerID

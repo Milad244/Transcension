@@ -36,6 +36,7 @@ public class Fireball : MonoBehaviour
 
         hit = true;
         boxCollider.enabled = false;
+        transform.rotation = Quaternion.Euler(0f, 0f, 0f); // resetting rotation for expode animation to be upside
         anim.SetTrigger("explode"); // causing fireball explode animation
     }
 

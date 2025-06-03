@@ -55,21 +55,23 @@ public class MoveSpike : MonoBehaviour
     /// </summary>
     private void moveH()
     {
-        float trapX = transform.position.x;
+      float trapX = transform.position.x;
 
-        if (trapX < minRange){
-          goingLeft = false;
-        } 
-        if (trapX > maxRange) {
-          goingLeft = true;
-        }
+      if (trapX < minRange){
+        goingLeft = false;
+        transform.position = new Vector3(minRange, transform.position.y, transform.position.z);
+      } 
+      if (trapX > maxRange) {
+        goingLeft = true;
+        transform.position = new Vector3(maxRange, transform.position.y, transform.position.z);
+      }
 
-        if (goingLeft)
-        {
-          rb.linearVelocityX = -speed;
-        } else if (!goingLeft) {
-          rb.linearVelocityX = speed;
-        }
+      if (goingLeft)
+      {
+        rb.linearVelocityX = -speed;
+      } else if (!goingLeft) {
+        rb.linearVelocityX = speed;
+      }
     }
 
     /// <summary>
@@ -77,24 +79,26 @@ public class MoveSpike : MonoBehaviour
     /// </summary>
     private void moveV()
     {
-        float trapY = transform.position.y;
+      float trapY = transform.position.y;
 
-        if (trapY < minRange){
-          goingDown = false;
-        } 
-        if (trapY > maxRange) {
-          goingDown = true;
-        }
+      if (trapY < minRange){
+        goingDown = false;
+        transform.position = new Vector3(transform.position.x, minRange, transform.position.z);
+      } 
+      if (trapY > maxRange) {
+        goingDown = true;
+        transform.position = new Vector3(transform.position.x, maxRange, transform.position.z);
+      }
 
-        if (goingDown)
-        {
-          rb.linearVelocityY = -speed;
-        } else if (!goingDown) {
-          rb.linearVelocityY = speed;
-        }
+      if (goingDown)
+      {
+        rb.linearVelocityY = -speed;
+      } else if (!goingDown) {
+        rb.linearVelocityY = speed;
+      }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (isHorizontal) {
           moveH();

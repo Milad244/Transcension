@@ -308,7 +308,6 @@ public class DialogueManager : MonoBehaviour
             if (!Cursor.visible)
             {
                 Cursor.visible = true;
-                Debug.Log("Cursor was hidden, re-enabled it.");
             }
 
             yield return null;
