@@ -29,7 +29,7 @@
         },
         {
           "id": 3,
-          "dialogue": "I am your better judgment. Listen here, and listen close. Stay within these walls and you shall never suffer",
+          "dialogue": "I am your better judgment. Stay idle within these walls and you shall never know suffering",
           "options": [
             {
               "text": " ...",
@@ -64,10 +64,10 @@
         },
         {
           "id": 2,
-          "dialogue": "You are truly pitiful. What is one step to an infinite staircase?",
+          "dialogue": "You are truly pitiful. What is one step to a never ending staircase?",
           "options": [
             {
-              "text": "One step",
+              "text": "Progress",
               "nextId": 3
             },
             {
@@ -78,10 +78,14 @@
         },
         {
           "id": 3,
-          "dialogue": "Once you are groveling on the ground and begging for your pain to end, we'll see if your shameful humor remains",
+          "dialogue": "Your “progress” means nothing. In the end, it won't even matter",
           "options": [
             {
-              "text": " ...",
+              "text": "How do you know that?",
+              "nextId": 5
+            },
+            {
+              "text": "I'll see about that",
               "nextId": -1
             }
           ]
@@ -91,14 +95,28 @@
           "dialogue": "Finally something we agree on",
           "options": [
             {
-              "text": "Pathetic",
-              "nextId": 5
+              "text": "You do realize that makes you pathetic right?",
+              "nextId": 6
+            },
+            {
+              "text": "Then you'll do your whining and I'll do my winning",
+              "nextId": -1
             }
           ]
         },
         {
           "id": 5,
-          "dialogue": "I would rather be pathetic then as shameful as you",
+          "dialogue": "We've been at this cycle for a long time... When will you ever learn?",
+          "options": [
+            {
+              "text": " ...",
+              "nextId": -1
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "dialogue": "I would rather be pathetic than a shameful failure like you",
           "options": [
             {
               "text": " ...",
@@ -120,7 +138,7 @@
               "nextId": 2
             },
             {
-              "text": "To succeed",
+              "text": "To prove you wrong",
               "nextId": 3
             }
           ]
@@ -130,17 +148,35 @@
           "dialogue": "You can stop. You can live a comfortable life",
           "options": [
             {
-              "text": "That isn't living",
+              "text": "Giving up isn't living. It's just existing",
+              "nextId": -1
+            },
+            {
+              "text": "Save the speech",
               "nextId": -1
             }
           ]
         },
         {
           "id": 3,
-          "dialogue": "Your futility knows no bounds",
+          "dialogue": "I'm the reason you keep dying right?",
           "options": [
             {
-              "text": "Neither does your indignation",
+              "text": "YOU ARE KEEPING ME CAPTIVE, REMEMBER?",
+              "nextId": 4
+            },
+            {
+              "text": "So? I will get out of here whether you are against me or not",
+              "nextId": -1
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "dialogue": "I'm only trying to save you from more pain. I wish you could see that",
+          "options": [
+            {
+              "text": "...",
               "nextId": -1
             }
           ]
@@ -262,7 +298,7 @@
         },
         {
           "id": 7,
-          "dialogue": "I can't hear another word out from your mouth. I will just have to destroy you myself, once and for all",
+          "dialogue": "I can't hear another word from your mouth. I will just have to destroy you myself, once and for all",
           "options": [
             {
               "text": "...",
@@ -294,7 +330,7 @@
               "nextId": 3
             },
             {
-              "text": "It'll get lonely without you",
+              "text": "It'll get quiet without you",
               "nextId": 3
             }
           ]
@@ -318,7 +354,7 @@
           "dialogue": "I am not so insolent as you",
           "options": [
             {
-              "text": "You are certainly as stubborn though",
+              "text": "Maybe just give life another try",
               "nextId": -1
             }
           ]

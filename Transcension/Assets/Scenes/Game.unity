@@ -2364,7 +2364,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4236133902247413191, guid: 38e50bde1a6588b4099eaee0f69960d6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.200003
+      value: -15.2
       objectReference: {fileID: 0}
     - target: {fileID: 4236133902247413191, guid: 38e50bde1a6588b4099eaee0f69960d6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -12547,6 +12547,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PWall (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 8485570521402096, guid: 38e50bde1a6588b4099eaee0f69960d6, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4236133902247413191, guid: 38e50bde1a6588b4099eaee0f69960d6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15.200003
@@ -13945,7 +13949,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: A Self
+  m_text: The Self
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

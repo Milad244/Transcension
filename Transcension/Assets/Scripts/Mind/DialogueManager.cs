@@ -273,7 +273,7 @@ public class DialogueManager : MonoBehaviour
             "What is peace without freedom?",
             "Success without pain?",
             "Life without failure?",
-            "A prison of the mind, with the guard of a self.",
+            "A prison of the mind, guarded by the self.",
             "But as I break free, I invite you with me.",
             "To come into the light"
         };
